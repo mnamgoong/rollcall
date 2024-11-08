@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-rollcall-dev-e788f-authRole",
+      "UnauthRoleArn": "arn:aws:iam::762233761777:role/amplify-rollcall-dev-e788f-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::762233761777:role/amplify-rollcall-dev-e788f-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-rollcall-dev-e788f-deployment",
+      "UnauthRoleName": "amplify-rollcall-dev-e788f-unauthRole",
+      "StackName": "amplify-rollcall-dev-e788f",
+      "StackId": "arn:aws:cloudformation:us-east-1:762233761777:stack/amplify-rollcall-dev-e788f/d9c1be00-9d67-11ef-ab91-1262aaa688f7",
+      "AmplifyAppId": "d1gco6deqlx7f6"
+    }
+  }
+}
