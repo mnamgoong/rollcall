@@ -1,0 +1,10 @@
+{
+  "resourceName": "TripData",
+  "tableName": "TripData",
+  "partitionKey": {
+    "fieldName": "id",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": []
+}
