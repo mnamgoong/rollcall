@@ -26,5 +26,23 @@
         "sendFormData": {}
       }
     }
+  },
+  "michelle": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-rollcall-michelle-b4043-authRole",
+      "UnauthRoleArn": "arn:aws:iam::762233761777:role/amplify-rollcall-michelle-b4043-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::762233761777:role/amplify-rollcall-michelle-b4043-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-rollcall-michelle-b4043-deployment",
+      "UnauthRoleName": "amplify-rollcall-michelle-b4043-unauthRole",
+      "StackName": "amplify-rollcall-michelle-b4043",
+      "StackId": "arn:aws:cloudformation:us-east-1:762233761777:stack/amplify-rollcall-michelle-b4043/aee351b0-9fa8-11ef-98b9-122c77988875",
+      "AmplifyAppId": "d1gco6deqlx7f6"
+    },
+    "categories": {
+      "function": {
+        "processData": {}
+      }
+    }
   }
 }

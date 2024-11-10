@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Container, Typography, Tabs, Tab, Button } from '@mui/material';
+import { post } from 'aws-amplify/api';
 import BasicInformation from './BasicInformation';
 import Transportation from './Transportation';
 import StudentRoster from './StudentRoster';
@@ -9,6 +10,7 @@ import Documents from './Documents';
 
 const CreateTrip = () => {
     const [activeTab, setActiveTab] = useState(0);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
     // centralized state for all form data
     const [formData, setFormData] = useState({
@@ -140,9 +142,49 @@ const CreateTrip = () => {
         }
     };
 
-    const handleSubmit = () => {
-        console.log('FORM DATA:', formData);
-        // submit form data as needed
+    const handleSubmit = async () => {
+        setIsSubmitting(true);
+        try {
+            const tripData = {
+                trips: [
+                    {
+                        id: `TRIP_${Date.now()}`,
+                        title: formData.basicInformation.tripName || "Default Title",
+                        description: formData.basicInformation.activityDescription || "Default Description",
+                        startDate: formData.basicInformation.tripDates,
+                        endDate: formData.basicInformation.tripDates,
+                        location: formData.basicInformation.mainDestination,
+                        transportMode: formData.transportation,
+                        participants: formData.studentRoster.classSelection ? [formData.studentRoster.classSelection] : [],
+                        organizers: formData.adultRoster.staff,
+                        chaperones: formData.adultRoster.chaperones,
+                        fundSource: formData.funding.fundingSource,
+                        costPerStudent: formData.funding.costPerStudent,
+                        totalCost: formData.funding.totalCost,
+                        status: "PENDING",
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString(),
+                    }
+                ]
+            };
+
+            const response = await post({
+                apiName: 'sendFormData',
+                path: '/items',
+                options: {
+                    body: tripData
+                }
+            });
+            
+            console.log('Success:', response);
+            alert('Trip submitted successfully!');
+            
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error submitting trip: ' + error.message);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -182,8 +224,9 @@ const CreateTrip = () => {
                         variant="contained"
                         color={activeTab == tabConfig.length - 1 ? "error" : "primary"}
                         onClick={handleNext}
+                        disabled={isSubmitting}
                     >
-                        {activeTab === tabConfig.length - 1 ? "Submit" : "Next"}
+                        {isSubmitting ? 'Submitting...' : activeTab === tabConfig.length - 1 ? "Submit" : "Next"}
                     </Button>
                 </Box>
             </Container>
