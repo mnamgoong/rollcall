@@ -1,26 +1,32 @@
 import React from 'react';
-import { AppBar, Avatar, Badge, IconButton, Toolbar, Typography } from "@mui/material";
-import Notifications from "@mui/icons-material/Notifications";
-import Person from "@mui/icons-material/Person";
+import { AppBar, Badge, IconButton, Toolbar, Typography } from "@mui/material";
+import { AccountCircle, Notifications } from "@mui/icons-material";
 
 const Header = () => {
-  return (
-    <AppBar position="static" color="primary">
-      <Toolbar>
-        <Typography variant="h6" flexGrow={1}>
-          Hi, Mr. Peabody!
-        </Typography>
-        <IconButton color="inherit">
-          <Badge badgeContent={1} color="error">
-            <Notifications />
-          </Badge>
-        </IconButton>
-        <Avatar>
-          <Person />
-        </Avatar>
-      </Toolbar>
-    </AppBar>
-  );
+	return (
+		<AppBar
+			position="fixed"
+			color="primary"
+			sx={{
+				width: "80vw", 
+				left: "20vw" 
+			}}
+		>
+			<Toolbar>
+				<Typography variant="h6" sx={{ flexGrow: 1 }}>
+					Hi, Mr. Peabody!
+				</Typography>
+				<IconButton color="inherit">
+					<Badge badgeContent={1} color="error">
+						<Notifications />
+					</Badge>
+				</IconButton>
+				<IconButton color="inherit">
+					<AccountCircle />
+				</IconButton>
+			</Toolbar>
+		</AppBar>
+	);
 };
 
 export default Header;
