@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Container, Typography, Tabs, Tab } from '@mui/material';
+import { Box, Container, Typography, Tabs, Tab, Button } from '@mui/material';
 import BasicInformation from './BasicInformation';
 import Transportation from './Transportation';
 import StudentRoster from './StudentRoster';
@@ -8,72 +8,187 @@ import Funding from './Funding';
 import Documents from './Documents';
 
 const CreateTrip = () => {
-	// state to store the active tab index
-	const [activeTab, setActiveTab] = useState(0);
+    const [activeTab, setActiveTab] = useState(0);
 
-	// tab configurations (title and component for each tab)
-	const tabConfig = [
-		{
-			title: "Basic Information",
-			component: <BasicInformation />,
+    // centralized state for all form data
+    const [formData, setFormData] = useState({
+        basicInformation: {
+            tripName: '',
+            mainDestination: '',
+            destinationLocation: '',
+            tripDates: '',
+            overnight: false,
+            outOfState: false,
+            international: false,
+            subjectArea: '',
+            activityDescription: '',
+            curriculumRelation: '',
+            arrangements: '',
+            eligibilityCriteria: '',
+        },
+        transportation: {
+            walking: false,
+            car: false,
+            bus: false,
+            charterBus: false,
+            train: false,
+            plane: false,
+            other: '',
+            accommodations: '',
+        },
+        studentRoster: {
+			classSelection: '',
 		},
-		{
-			title: "Transportation",
-			component: <Transportation />,
+		adultRoster: {
+			staff: [],
+            chaperones: [],
 		},
-		{
-			title: "Student Roster",
-			component: <StudentRoster />,
+		funding: {
+			fundingSource: '',
+			costPerStudent: '',
+			totalCost: '',
 		},
-		{
-			title: "Adult Roster",
-			component: <AdultRoster />,
-		},
-		{
-			title: "Funding",
-			component: <Funding />,
-		},
-		{
-			title: "Documents",
-			component: <Documents />,
+		documents: {
+			uploadedFiles: [],
 		}
-	];
+    });
 
-	// function to handle tab change
-	const handleTabChange = (event, newValue) => {
-		setActiveTab(newValue);
-	};
+    // tab configuration
+    const tabConfig = [
+        {
+            title: "Basic Information",
+            component: (
+                <BasicInformation
+                    data={formData.basicInformation}
+                    updateData={(data) => updateFormData('basicInformation', data)}
+                />
+            ),
+			data: formData.basicInformation,
+        },
+        {
+            title: "Transportation",
+            component: (
+                <Transportation
+                    data={formData.transportation}
+                    updateData={(data) => updateFormData('transportation', data)}
+                />
+            ),
+			data: formData.transportation,
+        },
+        {
+            title: "Student Roster",
+            component: (
+                <StudentRoster
+                    data={formData.studentRoster}
+                    updateData={(data) => updateFormData('studentRoster', data)}
+                />
+            ),
+			data: formData.studentRoster,
+        },
+		{
+            title: "Adult Roster",
+            component: (
+                <AdultRoster
+                    data={formData.adultRoster}
+                    updateData={(data) => updateFormData('adultRoster', data)}
+                />
+            ),
+            data: formData.adultRoster,
+        },
+		{
+            title: "Funding",
+            component: (
+                <Funding
+                    data={formData.funding}
+                    updateData={(data) => updateFormData('funding', data)}
+                />
+            ),
+            data: formData.funding,
+        },
+		{
+            title: "Documents",
+            component: (
+                <Documents
+                    data={formData.documents}
+                    updateData={(data) => updateFormData('documents', data)}
+                />
+            ),
+			data: formData.documents,
+        },
+    ];
 
-	return (
-		<Box display="flex" flexGrow={1} width="100%" >
-			<Container>
-				{/* render the title based on the active tab */}
-				<Typography variant="h5" fontWeight={"bold"} mt={4} mb={2}>
-					{tabConfig[activeTab].title}
-				</Typography>
+    // update form data function
+    const updateFormData = (section, newData) => {
+        setFormData(prevData => ({
+            ...prevData,
+            [section]: { ...prevData[section], ...newData }
+        }));
+    };
 
-				{/* tab navigation */}
-				<Tabs
-					value={activeTab}
-					onChange={handleTabChange}
-					indicatorColor="primary"
-					textColor="primary"
-				>
-					<Tab label="Basic Information" />
-					<Tab label="Transportation" />
-					<Tab label="Student Roster" />
-					<Tab label="Adult Roster" />
-					<Tab label="Funding" />
-					<Tab label="Documents" />
-				</Tabs>
+    // navigation functions
+    const handleNext = () => {
+		if (activeTab < tabConfig.length - 1) {
+			setActiveTab(prev => prev + 1);
+		} else {
+			handleSubmit();
+		}
+    };
 
-				{/* render the component associated with the active tab */}
-				<Box mt={2}>
-					{tabConfig[activeTab].component}
-				</Box>
-			</Container>
-		</Box>
-	);
-}
+    const handleBack = () => {
+        if (activeTab > 0) {
+            setActiveTab(prev => prev - 1);
+        }
+    };
+
+    const handleSubmit = () => {
+        console.log('FORM DATA:', formData);
+        // submit form data as needed
+    };
+
+    return (
+        <Box display="flex" flexGrow={1} width="100%">
+            <Container>
+                <Typography variant="h5" fontWeight="bold" mt={4} mb={2}>
+                    {tabConfig[activeTab].title}
+                </Typography>
+
+                {/* tabs */}
+                <Tabs
+                    value={activeTab}
+                    indicatorColor="primary"
+                    textColor="primary"
+                >
+                    {tabConfig.map((tab, index) => (
+                        <Tab key={index} label={tab.title} />
+                    ))}
+                </Tabs>
+
+                {/* render the current tab's component */}
+                <Box mt={2}>
+                    {tabConfig[activeTab].component}
+                </Box>
+
+                {/* navigation buttons */}
+                <Box display="flex" justifyContent="space-between" mt={4} mb={6}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleBack}
+                        disabled={activeTab === 0}
+                    >
+                        Previous
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color={activeTab == tabConfig.length - 1 ? "error" : "primary"}
+                        onClick={handleNext}
+                    >
+                        {activeTab === tabConfig.length - 1 ? "Submit" : "Next"}
+                    </Button>
+                </Box>
+            </Container>
+        </Box>
+    );
+};
 
 export default CreateTrip;

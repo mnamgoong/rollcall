@@ -1,29 +1,33 @@
 import React from "react";
-import { styled } from '@mui/material/styles';
-import {
-    Box,
-    Button,
-    Grid,
+import { styled } from "@mui/material/styles";
+import { 
+    Box, 
+    Button, 
+    Grid, 
     Typography,
-    Paper
+    Paper 
 } from "@mui/material";
-import {
-    CloudUpload as CloudUploadIcon
-} from '@mui/icons-material';
+import { 
+    CloudUpload as CloudUploadIcon 
+} from "@mui/icons-material";
 
-const VisuallyHiddenInput = styled('input')({
-    clip: 'rect(0 0 0 0)',
-    clipPath: 'inset(50%)',
+const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
     height: 1,
-    overflow: 'hidden',
-    position: 'absolute',
+    overflow: "hidden",
+    position: "absolute",
     bottom: 0,
     left: 0,
-    whiteSpace: 'nowrap',
+    whiteSpace: "nowrap",
     width: 1,
 });
 
-const Documents = () => {
+const Documents = ({ data, updateData }) => {
+    const handleFileChange = (event) => {
+        updateData({ documents: event.target.files });
+    };
+
     return (
         <Box display="flex" justifyContent="center" width="100%">
             <Grid container spacing={2}>
@@ -44,18 +48,12 @@ const Documents = () => {
                             Upload files
                             <VisuallyHiddenInput
                                 type="file"
-                                onChange={(event) => console.log(event.target.files)}
                                 multiple
+                                onChange={handleFileChange}
                             />
                         </Button>
                     </Paper>
                 </Grid>
-
-                <Grid item xs={12} display="flex" justifyContent="center" mt={2} mb={6}>
-					<Button variant="contained" color="error">
-						SUBMIT
-					</Button>
-				</Grid>
             </Grid>
         </Box>
     );
