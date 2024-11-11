@@ -1,4 +1,4 @@
-import React, { useState } from "react"; 
+import React, { useState, useEffect } from "react"; 
 import { 
     CalendarMonth as CalendarMonthIcon,
     LocationOn as LocationOnIcon 
@@ -14,24 +14,6 @@ import {
 } from "@mui/material"; 
 import TripDetails from "./TripDetails";
 
-// dummy data
-const trips = [
-    {
-        id: "TRIP_001",
-        tripName: "Boston Historical Tour",
-        mainDestination: "History Museum",
-        tripDates: "01/10/2025",
-        status: "PENDING"
-    },
-    {
-        id: "TRIP_002",
-        tripName: "Quebec Cultural Exchange",
-        mainDestination: "Culture Center",
-        tripDates: "03/20/2025",
-        status: "PENDING"
-    }
-];
-
 const getStatusColor = (status) => {
     switch (status) {
         case "PENDING":
@@ -46,18 +28,38 @@ const getStatusColor = (status) => {
 };
 
 const Overview = () => {
-    const [selectedTripId, setSelectedTripId] = useState(null); // state to store selected trip ID
+    const [selectedTripId, setSelectedTripId] = useState(null);
+    const [trips, setTrips] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchTrip = async () => {
+            try {
+                const response = await fetch(
+                    `https://lbeaduxwcl.execute-api.us-east-1.amazonaws.com/default/getTripByID/trip/id?id=TRIP_1731296552869`
+                );
+                const data = await response.json();
+                setTrips([data]);
+            } catch (error) {
+                console.error('Error fetching trip:', error);
+                setTrips([]);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchTrip();
+    }, []);
 
     const handleViewDetails = (tripId) => {
-        setSelectedTripId(tripId); // set selected trip ID when button is clicked
+        setSelectedTripId(tripId);
     };
 
     const handleBackToOverview = () => {
-        setSelectedTripId(null); // reset selected trip ID to go back to the list
+        setSelectedTripId(null);
     };
 
     if (selectedTripId) {
-        // directly render the TripDetails component
         return <TripDetails tripId={selectedTripId} onBack={handleBackToOverview} />;
     }
 
