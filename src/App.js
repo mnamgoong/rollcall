@@ -7,7 +7,6 @@ import Dashboard from './Screens/Dashboard';
 import CreateTrip from './Screens/CreateTrip/CreateTrip';
 import MyTrips from './Screens/MyTrips/Overview';
 import Help from './Screens/Help';
-import { Box, Container, Typography, Tabs, Tab } from '@mui/material';
 
 function App() {
 	// state to store the active page
