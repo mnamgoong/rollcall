@@ -55,46 +55,44 @@ const Overview = () => {
     const handleBackToOverview = () => {
         setSelectedTripId(null); // reset selected trip ID to go back to the list
     };
-    
+
+    if (selectedTripId) {
+        // directly render the TripDetails component
+        return <TripDetails tripId={selectedTripId} onBack={handleBackToOverview} />;
+    }
+
     return (
         <Box display="flex" flexGrow={1} justifyContent="center" width="100%">
             <Container>
-                {selectedTripId ? (
-                    // render TripDetails when a trip is selected
-                    <TripDetails tripId={selectedTripId} onBack={handleBackToOverview} />
-                ) : (
-                    <>
-                    <Typography variant="h5" fontWeight="bold" mt={4} mb={2}>My Trips</Typography>
-                    <Divider />
-                    <Grid container spacing={4} mt={2}>
-                        {trips.map((trip) => {
-                            const { bgcolor, textColor } = getStatusColor(trip.status);
+                <Typography variant="h5" fontWeight="bold" mt={4} mb={2}>My Trips</Typography>
+                <Divider />
+                <Grid container spacing={4} mt={2}>
+                    {trips.map((trip) => {
+                        const { bgcolor, textColor } = getStatusColor(trip.status);
 
-                            return (
-                                <Grid item xs={12} sm={6} md={4} key={trip.id}>
-                                    <Paper elevation={3} sx={{ p: 2, bgcolor }}>
-                                        <Typography variant="h6" fontWeight="bold">{trip.tripName}</Typography>
-                                        <Box display="flex" alignItems="center" mt={2}>
-                                            <LocationOnIcon />
-                                            <Typography variant="body2" ml={1}>{trip.mainDestination}</Typography>
-                                            <CalendarMonthIcon sx={{ ml: 2 }}/>
-                                            <Typography variant="body2" ml={1}>{trip.tripDates}</Typography>
-                                        </Box>
-                                        <Box mt={2} p={1} bgcolor={bgcolor} borderRadius={1}>
-                                            <Typography variant="body2" color={textColor}>
-                                                <strong>Status:</strong> {trip.status}
-                                            </Typography>
-                                        </Box>
-                                        <Button variant="contained" fullWidth sx={{ mt: 2, bgcolor: "#141414" }} onClick={() => handleViewDetails(trip.id)}>
-                                            View Details
-                                        </Button>
-                                    </Paper>
-                                </Grid>
-                            );
-                        })}
-                    </Grid>
-                    </>
-                )}
+                        return (
+                            <Grid item xs={12} sm={6} md={4} key={trip.id}>
+                                <Paper elevation={3} sx={{ p: 2, bgcolor }}>
+                                    <Typography variant="h6" fontWeight="bold">{trip.tripName}</Typography>
+                                    <Box display="flex" alignItems="center" mt={2}>
+                                        <LocationOnIcon />
+                                        <Typography variant="body2" ml={1}>{trip.mainDestination}</Typography>
+                                        <CalendarMonthIcon sx={{ ml: 2 }}/>
+                                        <Typography variant="body2" ml={1}>{trip.tripDates}</Typography>
+                                    </Box>
+                                    <Box mt={2} p={1} bgcolor={bgcolor} borderRadius={1}>
+                                        <Typography variant="body2" color={textColor}>
+                                            <strong>Status:</strong> {trip.status}
+                                        </Typography>
+                                    </Box>
+                                    <Button variant="contained" fullWidth sx={{ mt: 2, bgcolor: "#141414" }} onClick={() => handleViewDetails(trip.id)}>
+                                        View Details
+                                    </Button>
+                                </Paper>
+                            </Grid>
+                        );
+                    })}
+                </Grid>
             </Container>
         </Box>
     );
