@@ -18,7 +18,7 @@ const AdultRoster = ({ data }) => {
                     <Typography variant="h6" fontWeight="bold">Staff</Typography>
                     <Paper variant="outlined" sx={{ mt: 2, p: 2 }}>
                         <Box display="flex" alignItems="center">
-                            <IconButton color="error" onClick={handleAddStaff}>
+                            <IconButton color="error">
                                 <AddCircleIcon />
                             </IconButton>
                             <Typography ml={1}>Add staff members</Typography>
@@ -30,7 +30,7 @@ const AdultRoster = ({ data }) => {
                     <Typography variant="h6" fontWeight="bold">Chaperones</Typography>
                     <Paper variant="outlined" sx={{ mt: 2, p: 2 }}>
                         <Box display="flex" alignItems="center">
-                            <IconButton color="error" onClick={handleAddChaperone}>
+                            <IconButton color="error">
                                 <AddCircleIcon />
                             </IconButton>
                             <Typography ml={1}>Add chaperones</Typography>
