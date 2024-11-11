@@ -36,6 +36,8 @@ import StudentRoster from './CreateATrip/StudentRoster';
 import AdultRoster from './CreateATrip/AdultRoster';
 import Funding from './CreateATrip/Funding';
 import Documents from './CreateATrip/Documents';
+import TripList from './ViewTrips/TripList';
+
 import { Box, Container, Typography, Tabs, Tab } from '@mui/material';
 
 function App() {

@@ -26,5 +26,37 @@
         "sendFormData": {}
       }
     }
+  },
+  "rollcall": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-rollcall-rollcall-727da-authRole",
+      "UnauthRoleArn": "arn:aws:iam::762233761777:role/amplify-rollcall-rollcall-727da-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::762233761777:role/amplify-rollcall-rollcall-727da-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-rollcall-rollcall-727da-deployment",
+      "UnauthRoleName": "amplify-rollcall-rollcall-727da-unauthRole",
+      "StackName": "amplify-rollcall-rollcall-727da",
+      "StackId": "arn:aws:cloudformation:us-east-1:762233761777:stack/amplify-rollcall-rollcall-727da/cfd8fb00-9ef3-11ef-a606-0e07dea7e4d3",
+      "AmplifyAppId": "d1gco6deqlx7f6"
+    },
+    "categories": {
+      "function": {
+        "processData": {
+          "storageTripdataName": "TripData-dev",
+          "deploymentBucketName": "amplify-rollcall-rollcall-727da-deployment",
+          "s3Key": "amplify-builds/processData-5578643557655749762b-build.zip"
+        },
+        "getFormData": {
+          "deploymentBucketName": "amplify-rollcall-rollcall-727da-deployment",
+          "s3Key": "amplify-builds/getFormData-62574c6c565953765765-build.zip"
+        }
+      },
+      "api": {
+        "sendFormData": {}
+      },
+      "storage": {
+        "TripData": {}
+      }
+    }
   }
 }

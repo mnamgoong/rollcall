@@ -9,6 +9,14 @@
           ],
           "category": "function",
           "resourceName": "processData"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "getFormData"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -16,6 +24,25 @@
     }
   },
   "function": {
+    "getFormData": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributeEnvMap": {
+            "Arn": "TABLE_ARN",
+            "Name": "TABLE_NAME"
+          },
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "storage",
+          "resourceName": "TripData"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "processData": {
       "build": true,
       "dependsOn": [],
@@ -24,6 +51,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_getFormData_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getFormData"
+        }
+      ]
+    },
+    "AMPLIFY_function_getFormData_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getFormData"
+        }
+      ]
+    },
     "AMPLIFY_function_processData_deploymentBucketName": {
       "usedBy": [
         {
