@@ -44,5 +44,33 @@
         "processData": {}
       }
     }
+  },
+  "michellen": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-rollcall-michellen-c224a-authRole",
+      "UnauthRoleArn": "arn:aws:iam::762233761777:role/amplify-rollcall-michellen-c224a-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::762233761777:role/amplify-rollcall-michellen-c224a-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-rollcall-michellen-c224a-deployment",
+      "UnauthRoleName": "amplify-rollcall-michellen-c224a-unauthRole",
+      "StackName": "amplify-rollcall-michellen-c224a",
+      "StackId": "arn:aws:cloudformation:us-east-1:762233761777:stack/amplify-rollcall-michellen-c224a/44576490-9fc0-11ef-97ac-0ea15dff965b",
+      "AmplifyAppId": "d1gco6deqlx7f6"
+    },
+    "categories": {
+      "function": {
+        "processData": {
+          "storageTripdataName": "TripData-dev",
+          "deploymentBucketName": "amplify-rollcall-michellen-c224a-deployment",
+          "s3Key": "amplify-builds/processData-5578643557655749762b-build.zip"
+        }
+      },
+      "api": {
+        "sendFormData": {}
+      },
+      "storage": {
+        "TripData": {}
+      }
+    }
   }
 }
