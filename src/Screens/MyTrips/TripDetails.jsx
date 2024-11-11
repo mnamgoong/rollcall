@@ -11,8 +11,8 @@ import {
 import BasicInformation from "./BasicInformation";
 import Transportation from "./Transportation";
 import StudentRoster from "./StudentRoster"; 
-import AdultRoster from "../CreateTrip/AdultRoster"; 
-import Funding from "../CreateTrip/Funding";
+import AdultRoster from "./AdultRoster"; 
+import Funding from "./Funding";
 import Documents from "../CreateTrip/Documents";
 
 const TripDetails = ({ tripID, onBack }) => {
