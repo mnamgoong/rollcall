@@ -15,42 +15,35 @@ import AdultRoster from "./AdultRoster";
 import Funding from "./Funding";
 import Documents from "../CreateTrip/Documents";
 
-const TripDetails = ({ tripID, onBack }) => {
+const TripDetails = ({ tripId, onBack }) => {
+    const [tripData, setTripData] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     const [activeTab, setActiveTab] = useState(0);
 
-    // add DB data
-    const tripData = {
-        "staff": [],
-        "costPerStudent": "20",
-        "status": "PENDING",
-        "walking": false,
-        "totalCost": "400",
-        "subjectArea": "AP World History",
-        "destinationLocation": "Washington, DC, USA",
-        "charterBus": false,
-        "arrangements": "Students will have a substitute teacher.",
-        "eligibilityCriteria": "Students must be enrolled in AP World History.",
-        "id": "TRIP_001",
-        "international": false,
-        "bus": true,
-        "tripName": "History Trip",
-        "accommodations": "",
-        "uploadedFiles": [],
-        "outOfState": true,
-        "other": "",
-        "createdAt": "2024-11-11T02:43:10.288041",
-        "plane": false,
-        "curriculumRelation": "Students will be immersed in history.",
-        "train": false,
-        "classSelection": "Class 1",
-        "car": false,
-        "tripDates": "03/12/2024",
-        "updatedAt": "2024-11-11T02:43:10.288078",
-        "fundingSource": "Class Budget",
-        "chaperones": [],
-        "activityDescription": "Students will be going to the Smithsonian Institute, where we'll receive a tour of the different exhibits.",
-        "overnight": true,
-        "mainDestination": "Smithsonian Institute"
+    useEffect(() => {
+        const fetchTripDetails = async () => {
+            try {
+                const response = await fetch(
+                    `https://lbeaduxwcl.execute-api.us-east-1.amazonaws.com/default/getTripByID/trip/id?id=${tripId}`
+                );
+                const data = await response.json();
+                setTripData(data);
+            } catch (error) {
+                console.error('Error fetching trip details:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchTripDetails();
+    }, [tripId]);
+
+    if (isLoading) {
+        return <Typography>Loading trip details...</Typography>;
+    }
+
+    if (!tripData) {
+        return <Typography>Failed to load trip details.</Typography>;
     }
 
     const handleNext = () => {
@@ -91,11 +84,6 @@ const TripDetails = ({ tripID, onBack }) => {
             component: <Documents data={tripData} />
         }
     ];
-
-    if (!tripData) {
-        // incase of error while fetching the data
-        return <Typography mt={2}>Failed to load trip details.</Typography>;
-    }
 
     return (
         <Box display="flex" flexGrow={1} width="100%">

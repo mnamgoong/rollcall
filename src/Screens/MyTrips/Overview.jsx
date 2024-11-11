@@ -5,12 +5,12 @@ import {
 } from "@mui/icons-material"; 
 import { 
     Box, 
-    Button, 
+    Button,
     Container,
     Divider, 
     Grid, 
     Paper, 
-    Typography, 
+    Typography,
 } from "@mui/material"; 
 import TripDetails from "./TripDetails";
 
@@ -33,22 +33,20 @@ const Overview = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const fetchTrip = async () => {
+        const fetchTrips = async () => {
             try {
-                const response = await fetch(
-                    `https://lbeaduxwcl.execute-api.us-east-1.amazonaws.com/default/getTripByID/trip/id?id=TRIP_1731296552869`
-                );
+                const response = await fetch('https://olt95t35ea.execute-api.us-east-1.amazonaws.com/dev/gettrips');
                 const data = await response.json();
-                setTrips([data]);
+                setTrips(data.data || []);
             } catch (error) {
-                console.error('Error fetching trip:', error);
+                console.error('Error fetching trips:', error);
                 setTrips([]);
             } finally {
                 setIsLoading(false);
             }
         };
 
-        fetchTrip();
+        fetchTrips();
     }, []);
 
     const handleViewDetails = (tripId) => {
@@ -71,7 +69,6 @@ const Overview = () => {
                 <Grid container spacing={4} mt={2}>
                     {trips.map((trip) => {
                         const { bgcolor, textColor } = getStatusColor(trip.status);
-
                         return (
                             <Grid item xs={12} sm={6} md={4} key={trip.id}>
                                 <Paper elevation={3} sx={{ p: 2, bgcolor }}>
@@ -80,14 +77,19 @@ const Overview = () => {
                                         <LocationOnIcon />
                                         <Typography variant="body2" ml={1}>{trip.mainDestination}</Typography>
                                         <CalendarMonthIcon sx={{ ml: 2 }}/>
-                                        <Typography variant="body2" ml={1}>{trip.tripDates}</Typography>
+                                        <Typography variant="body2" ml={1}>{trip.startDate}</Typography>
                                     </Box>
                                     <Box mt={2} p={1} bgcolor={bgcolor} borderRadius={1}>
                                         <Typography variant="body2" color={textColor}>
                                             <strong>Status:</strong> {trip.status}
                                         </Typography>
                                     </Box>
-                                    <Button variant="contained" fullWidth sx={{ mt: 2, bgcolor: "#141414" }} onClick={() => handleViewDetails(trip.id)}>
+                                    <Button 
+                                        variant="contained" 
+                                        fullWidth 
+                                        sx={{ mt: 2, bgcolor: "#141414" }} 
+                                        onClick={() => handleViewDetails(trip.id)}
+                                    >
                                         View Details
                                     </Button>
                                 </Paper>
