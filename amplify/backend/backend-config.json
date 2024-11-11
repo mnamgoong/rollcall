@@ -1,5 +1,19 @@
 {
   "api": {
+    "getTripInfoByID": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "displayDataID"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
     "sendFormData": {
       "dependsOn": [
         {
@@ -24,6 +38,12 @@
     }
   },
   "function": {
+    "displayDataID": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "getFormData": {
       "build": true,
       "dependsOn": [
@@ -51,22 +71,6 @@
     }
   },
   "parameters": {
-    "AMPLIFY_function_getFormData_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "getFormData"
-        }
-      ]
-    },
-    "AMPLIFY_function_getFormData_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "getFormData"
-        }
-      ]
-    },
     "AMPLIFY_function_processData_deploymentBucketName": {
       "usedBy": [
         {

@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "paths": {
+    "/api/getTripInfo": {
+      "name": "/api/getTripInfo",
+      "lambdaFunction": "displayDataID",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}
