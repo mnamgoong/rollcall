@@ -144,62 +144,53 @@ const CreateTrip = () => {
 
     const handleSubmit = async () => {
         setIsSubmitting(true);
-        try {
-            const tripData = {
-                trips: [
-                    {
-                        id: `TRIP_${Date.now()}`,
-                        tripName: formData.basicInformation.tripName,
-                        mainDestination: formData.basicInformation.mainDestination,
-                        destinationLocation: formData.basicInformation.destinationLocation,
-                        tripDates: formData.basicInformation.tripDates,
-                        overnight: formData.basicInformation.overnight ,
-                        outOfState: formData.basicInformation.outOfState,
-                        international: formData.basicInformation.outOfState,
-                        subjectArea: formData.basicInformation.subjectArea,
-                        activityDescription: formData.basicInformation.activityDescription,
-                        curriculumRelation: formData.basicInformation.curriculumRelation,
-                        arrangements: formData.basicInformation.arrangements,
-                        eligibilityCriteria: formData.basicInformation.eligibilityCriteria,
-                        walking: formData.transportation.walking,
-                        car: formData.transportation.car,
-                        bus: formData.transportation.bus,
-                        charterBus: formData.transportation.charterBus,
-                        train: formData.transportation.train,
-                        plane: formData.transportation.plane,
-                        other: formData.transportation.other,
-                        accommodations: formData.transportation.accommodations,
-                        classSelection: formData.studentRoster.classSelection,
-                        staff: formData.adultRoster.staff,
-                        chaperones: formData.adultRoster.chaperones,
-                        fundingSource: formData.funding.fundingSource,
-                        costPerStudent: formData.costPerStudent.costPerStudent,
-                        totalCost: formData.transportation.totalCost,
-                        uploadedFiles: formData.transportation.uploadedFiles,
-                        status: "PENDING",
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                    }
-                ]
-            };
-
-            const response = await post({
-                apiName: 'sendFormData',
-                path: '/items',
-                options: {
-                    body: tripData
-                }
-            });
-            
-            console.log('Success:', response);
-            alert('Trip submitted successfully!');
-            
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Error submitting trip: ' + error.message);
-        } finally {
-            setIsSubmitting(false);
-        }
+        const tripData = {
+            trips: [{
+                id: `TRIP_${Date.now()}`,
+                tripName: formData.basicInformation.tripName,
+                mainDestination: formData.basicInformation.mainDestination,
+                destinationLocation: formData.basicInformation.destinationLocation,
+                tripDates: formData.basicInformation.tripDates,
+                overnight: formData.basicInformation.overnight,
+                outOfState: formData.basicInformation.outOfState,
+                international: formData.basicInformation.outOfState,
+                subjectArea: formData.basicInformation.subjectArea,
+                activityDescription: formData.basicInformation.activityDescription,
+                curriculumRelation: formData.basicInformation.curriculumRelation,
+                arrangements: formData.basicInformation.arrangements,
+                eligibilityCriteria: formData.basicInformation.eligibilityCriteria,
+                walking: formData.transportation.walking,
+                car: formData.transportation.car,
+                bus: formData.transportation.bus,
+                charterBus: formData.transportation.charterBus,
+                train: formData.transportation.train,
+                plane: formData.transportation.plane,
+                other: formData.transportation.other,
+                accommodations: formData.transportation.accommodations,
+                classSelection: formData.studentRoster.classSelection,
+                staff: formData.adultRoster.staff,
+                chaperones: formData.adultRoster.chaperones,
+                fundingSource: formData.funding.fundingSource,
+                costPerStudent: formData.funding.costPerStudent,
+                totalCost: formData.funding.totalCost,
+                uploadedFiles: formData.documents.uploadedFiles,
+                status: "PENDING",
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+            }]
+        };
+        
+        const response = await post({
+            apiName: 'sendFormData',
+            path: '/items',
+            options: {
+                body: tripData
+            }
+        });
+        
+        console.log('Success:', response);
+        alert('Trip submitted successfully!');
+        setIsSubmitting(false);        
     };
 
     return (
