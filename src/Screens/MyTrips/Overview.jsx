@@ -20,7 +20,7 @@ const getStatusColor = (status) => {
             return { bgcolor: "#fff8d3", textColor: "#bba215" };
         case "APPROVED":
             return { bgcolor: "#ecffee", textColor: "#60aa75" };
-        case "Completed":
+        case "DENIED":
             return { bgcolor: "#ff8164", textColor: "#820000" };
         default:
             return { bgcolor: "#e0e0e0", textColor: "#000000" };
