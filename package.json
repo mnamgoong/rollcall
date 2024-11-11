@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@aws-amplify/api": "^6.1.1",
+    "@aws-amplify/api-rest": "^4.0.56",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^6.1.6",
@@ -16,6 +18,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.3.0",
+    "react-router-dom": "^6.28.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },

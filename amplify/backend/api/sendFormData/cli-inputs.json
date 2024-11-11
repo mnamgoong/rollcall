@@ -7,6 +7,25 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/gettrips": {
+      "name": "/gettrips",
+      "lambdaFunction": "getFormData",
+      "permissions": {
+        "setting": "open"
+      },
+      "cors": {
+        "origin": "*",
+        "headers": [
+          "Content-Type",
+          "X-Amz-Date",
+          "Authorization",
+          "X-Api-Key",
+          "X-Amz-Security-Token"
+        ],
+        "allowCredentials": false,
+        "maxAge": 300
+      }
     }
   }
 }
