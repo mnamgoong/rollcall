@@ -1,17 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
-	Box, 
-	Grid, 
-	TextField, 
-	Checkbox, 
-	FormControlLabel 
+    Box, 
+    Grid, 
+    TextField, 
+    Checkbox, 
+    FormControlLabel 
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
+import { usePlacesWidget } from 'react-google-autocomplete';
 
 const BasicInformation = ({ data, updateData }) => {
+	const [mainDestination, setMainDestination] = useState(data.mainDestination || '');
+    const [destinationLocation, setDestinationLocation] = useState(data.destinationLocation || '');
+
+    // setup google places autocomplete for main destination
+    const { ref: mainDestinationRef } = usePlacesWidget({
+        apiKey: 'AIzaSyC3jNjnnyVdoA1VEOf6XtV6ik-RoFY1W3U',
+        onPlaceSelected: (place) => {
+            setMainDestination(place.formatted_address || '');
+        },
+        options: {
+            types: ['establishment'],
+        },
+    });
+
+    // setup google places autocomplete for destination location
+    const { ref: destinationLocationRef } = usePlacesWidget({
+        apiKey: 'AIzaSyC3jNjnnyVdoA1VEOf6XtV6ik-RoFY1W3U',
+        onPlaceSelected: (place) => {
+            const components = place.address_components;
+            const city = components.find((c) => c.types.includes('locality'))?.long_name || '';
+            const state = components.find((c) => c.types.includes('administrative_area_level_1'))?.short_name || '';
+            const country = components.find((c) => c.types.includes('country'))?.long_name || '';
+            setDestinationLocation(`${city}, ${state}, ${country}`);
+        },
+        options: {
+            types: ['(cities)'], 
+        },
+    });
+
     const handleChange = (event) => {
         const { name, value, type, checked } = event.target;
         updateData({ [name]: type === 'checkbox' ? checked : value });
@@ -32,27 +62,26 @@ const BasicInformation = ({ data, updateData }) => {
                     />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <TextField
+					<TextField
                         fullWidth
-                        required
                         label="What is the main destination?"
                         name="mainDestination"
-                        value={data.mainDestination}
-                        onChange={handleChange}
+                        inputRef={mainDestinationRef}
+                        value={mainDestination}
+                        onChange={(e) => setMainDestination(e.target.value)}
                         variant="outlined"
                     />
                 </Grid>
 				<Grid item xs={12} md={6}>
 					<TextField
-						fullWidth
-						required
-						label="Where is the main destination located?"
-						name="destinationLocation"
-						value={data.destinationLocation}
-						onChange={handleChange}
-						variant="outlined"
-						helperText="e.g. Atlanta, GA, USA"
-					/>
+                        fullWidth
+                        label="Where is the main destination located?"
+                        name="destinationLocation"
+                        inputRef={destinationLocationRef}
+                        value={destinationLocation}
+                        onChange={(e) => setDestinationLocation(e.target.value)}
+                        variant="outlined"
+                    />
 				</Grid>
 				<Grid item xs={12} md={6}>
 					<LocalizationProvider dateAdapter={AdapterDayjs}>
