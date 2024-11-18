@@ -55,41 +55,27 @@ const BasicInformation = ({ data, updateData }) => {
 					/>
 				</Grid>
 				<Grid item xs={12} md={6}>
-					{/* <TextField
-						fullWidth
-						required
-						label="What are the tentative date(s) for the trip?"
-						name="tripDates"
-						value={data.tripDates}
-						onChange={handleChange}
-						variant="outlined"
-						helperText="e.g. 01/01/2024-01/05/2024"
-					/> */}
 					<LocalizationProvider dateAdapter={AdapterDayjs}>
 						{data.overnight ? (
 							<Box display="flex" gap={2}>
 								<DesktopDatePicker 
+									required
 									label="When does the trip start?"
-									value={data.tripDates?.startDate ? dayjs(data.tripDates.startDate) : null}
+									value={data.startDate ? dayjs(data.startDate) : null}
 									onChange={(newValue) => {
 										updateData({ 
-											tripDates: {
-												...data.tripDates,
-												startDate: newValue ? newValue.format('MM/DD/YYYY') : ''
-											}
+											startDate: newValue ? newValue.format('MM/DD/YYYY') : ''
 										});
 									}}
 									sx={{ flex: 1 }}
 								/>
 								<DesktopDatePicker 
+									required
 									label="When does the trip end?"
-									value={data.tripDates?.endDate ? dayjs(data.tripDates.endDate) : null}
+									value={data.endDate ? dayjs(data.endDate) : null}
 									onChange={(newValue) => {
 										updateData({ 
-											tripDates: {
-												...data.tripDates,
-												endDate: newValue ? newValue.format('MM/DD/YYYY') : ''
-											}
+											endDate: newValue ? newValue.format('MM/DD/YYYY') : ''
 										});
 									}}
 									sx={{ flex: 1 }}
@@ -97,11 +83,13 @@ const BasicInformation = ({ data, updateData }) => {
 							</Box>
 						) : (
 							<DesktopDatePicker 
-                				label="What date is the trip?"
-								value={data.tripDates ? dayjs(data.tripDates) : null}
+								required
+								label="What date is the trip?"
+								value={data.startDate ? dayjs(data.startDate) : null}
 								onChange={(newValue) => {
 									updateData({ 
-										tripDates: newValue ? newValue.format('MM/DD/YYYY') : ''
+										startDate: newValue ? newValue.format('MM/DD/YYYY') : '',
+										endDate: '' 
 									});
 								}}
 								sx={{ width: '100%' }}

@@ -6,6 +6,10 @@ import {
 	Checkbox, 
 	FormControlLabel 
 } from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DesktopDatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
 
 const BasicInformation = ({ data }) => {
     return (
@@ -43,16 +47,32 @@ const BasicInformation = ({ data }) => {
 					/>
 				</Grid>
 				<Grid item xs={12} md={6}>
-					<TextField
-						fullWidth
-						disabled
-						label="What are the tentative date(s) for the trip?"
-						name="tripDates"
-						value={data.tripDates}
-						variant="outlined"
-						helperText="e.g. 01/01/2024-01/05/2024"
-					/>
-				</Grid>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        {data.overnight ? (
+                            <Box display="flex" gap={2}>
+                                <DesktopDatePicker 
+                                    disabled
+                                    label="When does the trip start?"
+                                    value={data.startDate ? dayjs(data.startDate) : null}
+                                    sx={{ flex: 1 }}
+                                />
+                                <DesktopDatePicker 
+                                    disabled
+                                    label="When does the trip end?"
+                                    value={data.endDate ? dayjs(data.endDate) : null}
+                                    sx={{ flex: 1 }}
+                                />
+                            </Box>
+                        ) : (
+                            <DesktopDatePicker 
+                                disabled
+                                label="What date is the trip?"
+                                value={data.startDate ? dayjs(data.startDate) : null}
+                                sx={{ width: '100%' }}
+                            />
+                        )}
+                    </LocalizationProvider>
+                </Grid>
                 <Grid item xs={12}>
                     <FormControlLabel
                         disabled
