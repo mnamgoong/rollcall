@@ -6,6 +6,10 @@ import {
 	Checkbox, 
 	FormControlLabel 
 } from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DesktopDatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
 
 const BasicInformation = ({ data, updateData }) => {
     const handleChange = (event) => {
@@ -51,7 +55,7 @@ const BasicInformation = ({ data, updateData }) => {
 					/>
 				</Grid>
 				<Grid item xs={12} md={6}>
-					<TextField
+					{/* <TextField
 						fullWidth
 						required
 						label="What are the tentative date(s) for the trip?"
@@ -60,7 +64,50 @@ const BasicInformation = ({ data, updateData }) => {
 						onChange={handleChange}
 						variant="outlined"
 						helperText="e.g. 01/01/2024-01/05/2024"
-					/>
+					/> */}
+					<LocalizationProvider dateAdapter={AdapterDayjs}>
+						{data.overnight ? (
+							<Box display="flex" gap={2}>
+								<DesktopDatePicker 
+									label="When does the trip start?"
+									value={data.tripDates?.startDate ? dayjs(data.tripDates.startDate) : null}
+									onChange={(newValue) => {
+										updateData({ 
+											tripDates: {
+												...data.tripDates,
+												startDate: newValue ? newValue.format('MM/DD/YYYY') : ''
+											}
+										});
+									}}
+									sx={{ flex: 1 }}
+								/>
+								<DesktopDatePicker 
+									label="When does the trip end?"
+									value={data.tripDates?.endDate ? dayjs(data.tripDates.endDate) : null}
+									onChange={(newValue) => {
+										updateData({ 
+											tripDates: {
+												...data.tripDates,
+												endDate: newValue ? newValue.format('MM/DD/YYYY') : ''
+											}
+										});
+									}}
+									sx={{ flex: 1 }}
+								/>
+							</Box>
+						) : (
+							<DesktopDatePicker 
+                				label="What date is the trip?"
+								value={data.tripDates ? dayjs(data.tripDates) : null}
+								onChange={(newValue) => {
+									updateData({ 
+										tripDates: newValue ? newValue.format('MM/DD/YYYY') : ''
+									});
+								}}
+								sx={{ width: '100%' }}
+							/>
+						)}
+					</LocalizationProvider>
 				</Grid>
                 <Grid item xs={12}>
                     <FormControlLabel

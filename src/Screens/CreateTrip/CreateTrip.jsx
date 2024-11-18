@@ -278,17 +278,31 @@ const CreateTrip = () => {
             }]
         };
         
-        const response = await post({
-            apiName: 'sendFormData',
-            path: '/items',
-            options: {
-                body: tripData
-            }
-        });
-        
-        console.log('Success:', response);
-        alert('Trip submitted successfully!');
-        setIsSubmitting(false);        
+        try {
+            const response = await post({
+                apiName: 'sendFormData',
+                path: '/items',
+                options: {
+                    body: tripData
+                }
+            });
+            console.log('Success:', response);
+
+            setCompletedSteps({
+                'basicInformation': true,
+                'transportation': true,
+                'studentRoster': true,
+                'adultRoster': true,
+                'funding': true,
+                'Documents': true
+            });
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to submit trip');
+        } finally {
+            alert('Trip submitted successfully!');
+            setIsSubmitting(false); 
+        }       
     };
 
     return (
