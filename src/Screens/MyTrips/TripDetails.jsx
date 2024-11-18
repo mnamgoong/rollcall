@@ -3,11 +3,10 @@ import {
     Box, 
     Button, 
     Container,
-    Tabs, 
-    Tab, 
     Typography,
     Divider, 
 } from "@mui/material";
+import ViewProgressTracker from './ViewProgressTracker'; 
 import BasicInformation from "./BasicInformation";
 import Transportation from "./Transportation";
 import StudentRoster from "./StudentRoster"; 
@@ -34,16 +33,15 @@ const TripDetails = ({ tripId, onBack }) => {
                 setIsLoading(false);
             }
         };
-
         fetchTripDetails();
     }, [tripId]);
 
     if (isLoading) {
-        return <Typography>Loading trip details...</Typography>;
+        return <Typography sx={{ mt: 10 }}>LOADING TRIP DETAILS...</Typography>;
     }
 
     if (!tripData) {
-        return <Typography>Failed to load trip details.</Typography>;
+        return <Typography sx={{ mt: 10 }}>FAILED TO LOAD TRIP DETAILS</Typography>;
     }
 
     const handleNext = () => {
@@ -101,19 +99,15 @@ const TripDetails = ({ tripId, onBack }) => {
 
                 <Divider sx={{ mb: 1 }}></Divider>
 
-                {/* tabs for different sections */}
-                <Tabs value={activeTab} indicatorColor="primary" textColor="primary">
-                    {sections.map((section, index) => (
-                        <Tab label={section.title} key={index} />
-                    ))}
-                </Tabs>
+                <ViewProgressTracker 
+                    steps={sections.map(section => section.title)}
+                    activeStep={activeTab}
+                />
 
-                {/* render the selected tab's content */}
                 <Box mt={2}>
-                    {sections[activeTab]?.component}
+                    {sections[activeTab].component}
                 </Box>
 
-                {/* navigation buttons */}
                 <Box display="flex" justifyContent="space-between" mt={4} mb={6}>
                     <Button
                         variant="contained"

@@ -1,6 +1,12 @@
-import React, { useState } from 'react';
-import { Box, Container, Typography, Tabs, Tab, Button } from '@mui/material';
+import React, { useState, useEffect, useCallback } from 'react';
+import { 
+    Box, 
+    Container, 
+    Typography, 
+    Button 
+} from '@mui/material';
 import { post } from 'aws-amplify/api';
+import ProgressTracker from './ProgressTracker';
 import BasicInformation from './BasicInformation';
 import Transportation from './Transportation';
 import StudentRoster from './StudentRoster';
@@ -11,6 +17,14 @@ import Documents from './Documents';
 const CreateTrip = () => {
     const [activeTab, setActiveTab] = useState(0);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+    const [completedSteps, setCompletedSteps] = useState({
+        'basicInformation': false,
+        'transportation': false,
+        'studentRoster': false,
+        'adultRoster': false,
+        'funding': false,
+        'documents': false
+    });
 
     // centralized state for all form data
     const [formData, setFormData] = useState({
@@ -56,7 +70,7 @@ const CreateTrip = () => {
     });
 
     // tab configuration
-    const tabConfig = [
+    const sections = [
         {
             title: "Basic Information",
             component: (
@@ -120,20 +134,99 @@ const CreateTrip = () => {
     ];
 
     // update form data function
-    const updateFormData = (section, newData) => {
+    const updateFormData = useCallback((section, newData) => {
         setFormData(prevData => ({
             ...prevData,
             [section]: { ...prevData[section], ...newData }
         }));
-    };
+    }, []);
+
+    // function to check if a section is complete
+    const checkSectionCompletion = useCallback((section) => {
+        console.log(`Checking completion for ${section}:`, formData[section]);
+    
+        if (!formData[section]) {
+            console.log(`No data for ${section}`);
+            return false;
+        }
+        
+        const data = formData[section];
+        
+        switch (section) {
+            case 'basicInformation':
+                const requiredFields = [
+                    'tripName',
+                    'mainDestination',
+                    'destinationLocation',
+                    'tripDates',
+                    'subjectArea',
+                    'activityDescription',
+                    'curriculumRelation',
+                    'arrangements',
+                    'eligibilityCriteria'
+                ];
+                return requiredFields.every(field => Boolean(data[field]));
+                
+            case 'transportation':
+                return Boolean(
+                    data.walking || 
+                    data.car || 
+                    data.bus || 
+                    data.charterBus || 
+                    data.train || 
+                    data.plane || 
+                    data.other ||
+                    data.accommodations
+                );
+                
+            case 'studentRoster':
+                return Boolean(data.classSelection);
+                
+            case 'adultRoster':
+                return Boolean(data.staff?.length > 0 || data.chaperones?.length > 0);
+                
+            case 'funding':
+                return Boolean(
+                    data.fundingSource && 
+                    data.costPerStudent && 
+                    data.totalCost
+                );
+                
+            case 'documents':
+                return Boolean(data.uploadedFiles?.length > 0);
+                
+            default:
+                return false;
+        }
+    }, [formData]);
+
+    // update completion status whenever form data changes
+    useEffect(() => {
+        const currentSection = Object.keys(completedSteps)[activeTab];
+        const newCompletedSteps = { ...completedSteps };
+        
+        console.log(`Checking current section: ${currentSection}`);
+        newCompletedSteps[currentSection] = checkSectionCompletion(currentSection);
+        
+        console.log('Section completion status:', newCompletedSteps[currentSection]);
+        setCompletedSteps(newCompletedSteps);
+    }, [formData, activeTab, completedSteps, checkSectionCompletion]);    
 
     // navigation functions
     const handleNext = () => {
-		if (activeTab < tabConfig.length - 1) {
-			setActiveTab(prev => prev + 1);
-		} else {
-			handleSubmit();
-		}
+        const currentSection = Object.keys(completedSteps)[activeTab];
+        const isCurrentSectionComplete = checkSectionCompletion(currentSection);
+    
+        if (!isCurrentSectionComplete) {
+            alert('Please complete all required fields before proceeding.');
+            return;
+        }
+    
+        if (activeTab < sections.length - 1) {
+            setActiveTab(prev => prev + 1);
+        } else {
+            handleSubmit();
+        }
     };
 
     const handleBack = () => {
@@ -197,23 +290,18 @@ const CreateTrip = () => {
         <Box display="flex" flexGrow={1} width="100%">
             <Container>
                 <Typography variant="h5" fontWeight="bold" mt={4} mb={2}>
-                    {tabConfig[activeTab].title}
+                    {sections[activeTab].title}
                 </Typography>
 
-                {/* tabs */}
-                <Tabs
-                    value={activeTab}
-                    indicatorColor="primary"
-                    textColor="primary"
-                >
-                    {tabConfig.map((tab, index) => (
-                        <Tab key={index} label={tab.title} />
-                    ))}
-                </Tabs>
+                <ProgressTracker 
+                    steps={sections.map(section => section.title)}
+                    activeStep={activeTab}
+                    completedSteps={completedSteps}
+                />
 
-                {/* render the current tab's component */}
+                {/* render the current section's component */}
                 <Box mt={2}>
-                    {tabConfig[activeTab].component}
+                    {sections[activeTab].component}
                 </Box>
 
                 {/* navigation buttons */}
@@ -228,11 +316,11 @@ const CreateTrip = () => {
                     </Button>
                     <Button
                         variant="contained"
-                        color={activeTab == tabConfig.length - 1 ? "error" : "primary"}
+                        color={activeTab === sections.length - 1 ? "error" : "primary"}
                         onClick={handleNext}
                         disabled={isSubmitting}
                     >
-                        {isSubmitting ? 'Submitting...' : activeTab === tabConfig.length - 1 ? "Submit" : "Next"}
+                        {isSubmitting ? 'Submitting...' : activeTab === sections.length - 1 ? "Submit" : "Next"}
                     </Button>
                 </Box>
             </Container>
