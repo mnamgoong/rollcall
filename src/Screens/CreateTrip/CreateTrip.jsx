@@ -201,27 +201,32 @@ const CreateTrip = () => {
     }, [formData]);
 
     // update completion status whenever form data changes
-    useEffect(() => {
-        const currentSection = Object.keys(completedSteps)[activeTab];
-        const newCompletedSteps = { ...completedSteps };
+    // useEffect(() => {
+    //     const currentSection = Object.keys(completedSteps)[activeTab];
+    //     const newCompletedSteps = { ...completedSteps };
         
-        console.log(`Checking current section: ${currentSection}`);
-        newCompletedSteps[currentSection] = checkSectionCompletion(currentSection);
+    //     console.log(`Checking current section: ${currentSection}`);
+    //     newCompletedSteps[currentSection] = checkSectionCompletion(currentSection);
         
-        console.log('Section completion status:', newCompletedSteps[currentSection]);
-        setCompletedSteps(newCompletedSteps);
-    }, [formData, activeTab, completedSteps, checkSectionCompletion]);    
+    //     console.log('Section completion status:', newCompletedSteps[currentSection]);
+    //     setCompletedSteps(newCompletedSteps);
+    // }, [formData, activeTab, completedSteps, checkSectionCompletion]);    
 
     // navigation functions
     const handleNext = () => {
-        const currentSection = Object.keys(completedSteps)[activeTab];
-        const isCurrentSectionComplete = checkSectionCompletion(currentSection);
+        // const currentSection = Object.keys(completedSteps)[activeTab];
+        // const isCurrentSectionComplete = checkSectionCompletion(currentSection);
     
-        if (!isCurrentSectionComplete) {
-            alert('Please complete all required fields before proceeding.');
-            return;
-        }
+        // if (!isCurrentSectionComplete) {
+        //     alert('Please complete all required fields before proceeding.');
+        //     return;
+        // }
     
+        // if (activeTab < sections.length - 1) {
+        //     setActiveTab(prev => prev + 1);
+        // } else {
+        //     handleSubmit();
+        // }
         if (activeTab < sections.length - 1) {
             setActiveTab(prev => prev + 1);
         } else {
