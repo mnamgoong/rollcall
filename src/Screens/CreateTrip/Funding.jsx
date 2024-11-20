@@ -31,8 +31,9 @@ const Funding = ({ data, updateData }) => {
                         >
                             <MenuItem value="" disabled><em>- Select -</em></MenuItem>
                             <MenuItem value="Class Budget">Class Budget</MenuItem>
-                            <MenuItem value="School Funding">School Funding</MenuItem>
+                            <MenuItem value="Department Budget">Department Budget</MenuItem>
                             <MenuItem value="External Grant">External Grant</MenuItem>
+                            <MenuItem value="Student Payments">Student Payments</MenuItem>
                         </Select>
                     </FormControl>
                 </Grid>

@@ -13,10 +13,56 @@ import StudentRoster from './StudentRoster';
 import AdultRoster from './AdultRoster';
 import Funding from './Funding';
 import Documents from './Documents';
+import Success from './Success';
 
-const CreateTrip = () => {
+const initialFormState = {
+    basicInformation: {
+        tripName: '',
+        tripType: '',
+        mainDestination: '',
+        startDate: '',
+        endDate: '',
+        overnight: false,
+        outOfState: false,
+        international: false,
+        tripPurpose: '',
+        athleticEvent: '',
+        subjectArea: '',
+        activityDescription: '',
+        curriculumRelation: '',
+        arrangements: '',
+        eligibilityCriteria: '',
+    },
+    transportation: {
+        walking: false,
+        car: false,
+        bus: false,
+        charterBus: false,
+        train: false,
+        plane: false,
+        other: '',
+        accommodations: '',
+    },
+    studentRoster: {
+        classSelection: '',
+    },
+    adultRoster: {
+        staff: [],
+        chaperones: [],
+    },
+    funding: {
+        fundingSource: '',
+        costPerStudent: '',
+        totalCost: '',
+    },
+    documents: {
+        uploadedFiles: [],
+    }
+};
+
+const CreateTrip = ({ setSelectedPage }) => {
     const [activeTab, setActiveTab] = useState(0);
-	const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [completedSteps, setCompletedSteps] = useState({
         'basicInformation': false,
         'transportation': false,
@@ -27,50 +73,7 @@ const CreateTrip = () => {
     });
 
     // centralized state for all form data
-    const [formData, setFormData] = useState({
-        basicInformation: {
-            tripName: '',
-            tripType: '',
-            mainDestination: '',
-            startDate: '',
-            endDate: '',
-            overnight: false,
-            outOfState: false,
-            international: false,
-            tripPurpose: '',
-            athleticEvent: '',
-            subjectArea: '',
-            activityDescription: '',
-            curriculumRelation: '',
-            arrangements: '',
-            eligibilityCriteria: '',
-        },
-        transportation: {
-            walking: false,
-            car: false,
-            bus: false,
-            charterBus: false,
-            train: false,
-            plane: false,
-            other: '',
-            accommodations: '',
-        },
-        studentRoster: {
-			classSelection: '',
-		},
-		adultRoster: {
-			staff: [],
-            chaperones: [],
-		},
-		funding: {
-			fundingSource: '',
-			costPerStudent: '',
-			totalCost: '',
-		},
-		documents: {
-			uploadedFiles: [],
-		}
-    });
+    const [formData, setFormData] = useState(initialFormState);
 
     // tab configuration
     const sections = [
@@ -82,7 +85,7 @@ const CreateTrip = () => {
                     updateData={(data) => updateFormData('basicInformation', data)}
                 />
             ),
-			data: formData.basicInformation,
+            data: formData.basicInformation,
         },
         {
             title: "Transportation",
@@ -92,7 +95,7 @@ const CreateTrip = () => {
                     updateData={(data) => updateFormData('transportation', data)}
                 />
             ),
-			data: formData.transportation,
+            data: formData.transportation,
         },
         {
             title: "Student Roster",
@@ -102,9 +105,9 @@ const CreateTrip = () => {
                     updateData={(data) => updateFormData('studentRoster', data)}
                 />
             ),
-			data: formData.studentRoster,
+            data: formData.studentRoster,
         },
-		{
+        {
             title: "Adult Roster",
             component: (
                 <AdultRoster
@@ -114,7 +117,7 @@ const CreateTrip = () => {
             ),
             data: formData.adultRoster,
         },
-		{
+        {
             title: "Funding",
             component: (
                 <Funding
@@ -124,7 +127,7 @@ const CreateTrip = () => {
             ),
             data: formData.funding,
         },
-		{
+        {
             title: "Documents",
             component: (
                 <Documents
@@ -132,7 +135,19 @@ const CreateTrip = () => {
                     updateData={(data) => updateFormData('documents', data)}
                 />
             ),
-			data: formData.documents,
+            data: formData.documents,
+        },
+        {
+            title: "Submission Complete",
+            component: (
+                <Success 
+                    onViewTrips={() => setSelectedPage("My Trips")}
+                    onCreateAnother={() => {
+                        setActiveTab(0);
+                        setFormData(initialFormState);
+                    }}
+                />
+            ),
         },
     ];
 
@@ -146,10 +161,10 @@ const CreateTrip = () => {
 
     // navigation functions
     const handleNext = () => {
-        if (activeTab < sections.length - 1) {
-            setActiveTab(prev => prev + 1);
-        } else {
+        if (activeTab === sections.length - 2) { // If on Documents page
             handleSubmit();
+        } else {
+            setActiveTab(prev => prev + 1);
         }
     };
 
@@ -216,14 +231,14 @@ const CreateTrip = () => {
                 'studentRoster': true,
                 'adultRoster': true,
                 'funding': true,
-                'Documents': true
+                'documents': true
             });
+            setActiveTab(sections.length - 1);
         } catch (error) {
             console.error('Error:', error);
             alert('Failed to submit trip');
         } finally {
-            alert('Trip submitted successfully!');
-            setIsSubmitting(false); 
+            setIsSubmitting(false);
         }       
     };
 
@@ -235,35 +250,35 @@ const CreateTrip = () => {
                 </Typography>
 
                 <ProgressTracker 
-                    steps={sections.map(section => section.title)}
+                    steps={sections.slice(0, -1).map(section => section.title)}
                     activeStep={activeTab}
                     completedSteps={completedSteps}
                 />
 
-                {/* render the current section's component */}
                 <Box mt={2}>
                     {sections[activeTab].component}
                 </Box>
 
-                {/* navigation buttons */}
-                <Box display="flex" justifyContent="space-between" mt={4} mb={6}>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleBack}
-                        disabled={activeTab === 0}
-                    >
-                        Previous
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color={activeTab === sections.length - 1 ? "error" : "primary"}
-                        onClick={handleNext}
-                        disabled={isSubmitting}
-                    >
-                        {isSubmitting ? 'Submitting...' : activeTab === sections.length - 1 ? "Submit" : "Next"}
-                    </Button>
-                </Box>
+                {activeTab !== sections.length - 1 && (
+                    <Box display="flex" justifyContent="space-between" mt={4} mb={6}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleBack}
+                            disabled={activeTab === 0}
+                        >
+                            Previous
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color={activeTab === sections.length - 2 ? "error" : "primary"}
+                            onClick={handleNext}
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? 'Submitting...' : activeTab === sections.length - 2 ? "Submit" : "Next"}
+                        </Button>
+                    </Box>
+                )}
             </Container>
         </Box>
     );

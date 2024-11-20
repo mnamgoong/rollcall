@@ -248,8 +248,9 @@ const AdultRoster = ({ data, updateData }) => {
                         variant="contained" 
                         color="primary"
                         disabled={!Object.values(formData.staff).every(Boolean)}
+                        sx={{ margin: 2 }}
                     >
-                        Add Staff Member
+                        Add
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -280,6 +281,7 @@ const AdultRoster = ({ data, updateData }) => {
                         onClick={() => handleSubmit('chaperone')} 
                         variant="contained"
                         disabled={!Object.values(formData.chaperone).every(Boolean)}
+                        sx={{ margin: 2 }}
                     >
                         Add
                     </Button>

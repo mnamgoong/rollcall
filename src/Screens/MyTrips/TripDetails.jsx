@@ -107,7 +107,7 @@ const TripDetails = ({ tripId, onBack }) => {
                     ID: {tripData.id}
                 </Typography>
 
-                <Divider sx={{ mb: 1 }}></Divider>
+                <Divider sx={{ mb: 2 }}></Divider>
 
                 <ViewProgressTracker 
                     steps={sections.map(section => section.title)}

@@ -73,7 +73,7 @@ const Transportation = ({ data, updateData }) => {
                     <TextField
                         fullWidth
                         multiline
-                        rows={4}
+                        rows={2}
                         variant="outlined"
                         value={data.accommodations}
                         onChange={handleChange}

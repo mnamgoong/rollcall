@@ -14,7 +14,8 @@ import {
     TableRow,
     Typography  
 } from "@mui/material";
-import studentData from '../../Data/students.json';
+import SearchIcon from '@mui/icons-material/Search';
+import studentData from '../../Data/students.json'; // dummy data
 
 const StudentRoster = ({ data }) => {
     // get and sort students for the selected period
@@ -65,6 +66,14 @@ const StudentRoster = ({ data }) => {
         </TableRow>
     );
 
+    const [searchTerm, setSearchTerm] = useState('');
+
+    // filter students based on search
+    const filteredStudents = students.filter(student => {
+        const fullName = `${student.lastName} ${student.firstName}`.toLowerCase();
+        return fullName.includes(searchTerm.toLowerCase());
+    });
+
     return (
         <Box display="flex" justifyContent="center" width="100%">
             <Grid container spacing={2}>
@@ -83,11 +92,47 @@ const StudentRoster = ({ data }) => {
                     </FormControl>
                 </Grid>
 
+                {/* Student Roster */}
                 {data.classSelection && (
                     <Grid item xs={12}>
-                        <Typography variant="h6" fontWeight="bold" sx={{ mt: 2 }}>
-                            Student Roster
-                        </Typography>
+                        <Box sx={{ 
+                            mt: 2, 
+                            display: 'flex', 
+                            justifyContent: 'space-between', 
+                            alignItems: 'center' 
+                        }}>
+                            <Typography variant="h6" fontWeight="bold">
+                                Student Roster
+                            </Typography>
+                            
+                            <FormControl variant="outlined" sx={{ width: '300px' }}>
+                                <Box sx={{ 
+                                    position: 'relative', 
+                                    display: 'flex', 
+                                    alignItems: 'center' 
+                                }}>
+                                    <SearchIcon sx={{ 
+                                        position: 'absolute',
+                                        left: '8px',
+                                        color: '#666'
+                                    }} />
+                                    <input
+                                        type="text"
+                                        placeholder="Search by student name..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        style={{
+                                            padding: '8px 12px 8px 36px', // Added left padding for icon
+                                            fontSize: '16px',
+                                            borderRadius: '4px',
+                                            border: '1px solid #ccc',
+                                            width: '100%'
+                                        }}
+                                    />
+                                </Box>
+                            </FormControl>
+                        </Box>
+
                         <TableContainer component={Paper} variant="outlined" sx={{ mt: 2 }}>
                             <Table>
                                 <TableHead>
@@ -99,7 +144,7 @@ const StudentRoster = ({ data }) => {
                                     ])}
                                 </TableHead>
                                 <TableBody>
-                                    {students.map((student, index) => (
+                                {(searchTerm.trim() === '' ? students : filteredStudents).map((student, index) => (
                                         <TableRow key={index}>
                                             <TableCell>
                                                 {`${student.lastName}, ${student.firstName}`}

@@ -18,7 +18,7 @@ function App() {
 			case "Dashboard":
 				return <Dashboard />;
 			case "Create a Trip":
-				return <CreateTrip />;
+				return <CreateTrip setSelectedPage={setSelectedPage}/>;
 			case "My Trips":
 				return <MyTrips />;
 			case "Help":
