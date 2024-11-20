@@ -18,13 +18,29 @@ import TripDetails from "./TripDetails";
 const getStatusColor = (status) => {
     switch (status) {
         case "PENDING":
-            return { bgcolor: "#fff8d3", textColor: "#bba215" };
+            return { 
+                bgcolor: "#fce990", 
+                textColor: "#fbfbdd",
+                pillColor: "#deaf1c" 
+            };
         case "APPROVED":
-            return { bgcolor: "#ecffee", textColor: "#60aa75" };
+            return { 
+                bgcolor: "#9dc19d", 
+                textColor: "#c9dac9",
+                pillColor: "#2c7c34" 
+            };
         case "DENIED":
-            return { bgcolor: "#ff8164", textColor: "#820000" };
+            return { 
+                bgcolor: "#e37b78", 
+                textColor: "#f5bcB6",
+                pillColor: "#d2302e" 
+            };
         default:
-            return { bgcolor: "#e0e0e0", textColor: "#000000" };
+            return { 
+                bgcolor: "#bfbfbf", 
+                textColor: "#dedede",
+                pillColor: "#6f6f6f" 
+            };
     }
 };
 
@@ -81,20 +97,31 @@ const Overview = () => {
             <Container>
                 <Typography variant="h5" fontWeight="bold" mt={4} mb={2}>My Trips</Typography>
                 <Divider />
-                <Grid container spacing={4} mt={2}>
+                <Grid container spacing={4} mt={2} mb={6}>
                     {trips.map((trip) => {
-                        const { bgcolor, textColor } = getStatusColor(trip.status);
+                        const { bgcolor, textColor, pillColor } = getStatusColor(trip.status);
                         return (
                             <Grid item xs={12} sm={6} md={4} key={trip.id}>
                                 <Paper elevation={3} sx={{ p: 2, bgcolor }}>
-                                    <Typography variant="h6" fontWeight="bold">{trip.tripName}</Typography>
-                                    <Box display="flex" alignItems="center" mt={2}>
-                                        <LocationOnIcon />
-                                        <Typography variant="body2" ml={1}>{trip.mainDestination}</Typography>
-                                        <CalendarMonthIcon sx={{ ml: 2 }}/>
-                                        <Typography variant="body2" ml={1}>{trip.startDate}</Typography>
+                                    <Typography variant="h6" fontWeight="bold">{trip.tripName || "Untitled Trip"}</Typography>
+                                    <Box display="flex" flexDirection="column" gap={1} mt={2}>
+                                        <Box display="flex" alignItems="center">
+                                            <LocationOnIcon />
+                                            <Typography variant="body2" ml={1}>{trip.mainDestination || "Unknown Destination"}</Typography>
+                                        </Box>
+                                        <Box display="flex" alignItems="center">
+                                            <CalendarMonthIcon />
+                                            <Typography variant="body2" ml={1}>{trip.startDate || "Unknown Date"}</Typography>
+                                        </Box>
                                     </Box>
-                                    <Box mt={2} p={1} bgcolor={bgcolor} borderRadius={1}>
+                                    <Box 
+                                        mt={2} 
+                                        display="inline-block"
+                                        px={2}
+                                        py={0.5}
+                                        bgcolor={pillColor} 
+                                        borderRadius="50px"
+                                    >
                                         <Typography variant="body2" color={textColor}>
                                             <strong>Status:</strong> {trip.status}
                                         </Typography>
