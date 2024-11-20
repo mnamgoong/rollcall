@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Container } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from './theme';
 import './App.css';
 import Sidebar from './Components/Sidebar';
 import Header from './Components/Header';
@@ -29,19 +31,21 @@ function App() {
 	};
 
 	return (
-		<Box display="flex">
-			{/* sidebar */}
-			<Sidebar onSelectPage={setSelectedPage} />
+		<ThemeProvider theme={theme}>
+			<Box display="flex">
+				{/* sidebar */}
+				<Sidebar onSelectPage={setSelectedPage} />
 
-			{/* main content */}
-			<Box
-				ml="20vw" // align content next to the sidebar
-				width="80vw" // content area takes up the remaining width
-			>
-				<Header />
-				<Container sx={{ mt: "10vh" }}>{renderPage()}</Container>
+				{/* main content */}
+				<Box
+					ml="20vw" // align content next to the sidebar
+					width="80vw" // content area takes up the remaining width
+				>
+					<Header />
+					<Container sx={{ mt: "10vh" }}>{renderPage()}</Container>
+				</Box>
 			</Box>
-		</Box>
+		</ThemeProvider>
 	);
 }
 

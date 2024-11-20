@@ -76,12 +76,12 @@ const Sidebar = ({onSelectPage}) => {
                             button 
                             onClick={() => handleItemClick(id)}
                             sx={{
-                                bgcolor: selectedItem === id ? '#f5f5f5' : 'transparent',
+                                bgcolor: selectedItem === id ? '#eee' : 'transparent',
                                 borderRadius: '8px',
                                 mb: 1, 
                                 '&:hover': {
                                     bgcolor: selectedItem === id 
-                                        ? '#f5f5f5' 
+                                        ? '#eee' 
                                         : 'rgba(0, 0, 0, 0.04)'
                                 }
                             }}
