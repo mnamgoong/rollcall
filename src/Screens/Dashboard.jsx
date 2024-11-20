@@ -31,13 +31,13 @@ const ProgressLabel = styled(Typography)({
 // dummy data
 const tripData = [
     {
-        title: "Mrs. Q's 4th Grade Art Class",
+        title: "Orchestra Trip",
         signed: 18,
 		total: 25,
         color: '#4CAF50',
     },
     {
-        title: "Mr. J's 8th Grade History Class",
+        title: "Science Museum Trip",
         signed: 13,
 		total: 20,
         color: '#f44336',
@@ -46,13 +46,9 @@ const tripData = [
 
 const proposedTrips = [
     {
-        title: "Music Department",
-        location: "Radio City Music Hall",
-    },
-    {
-        title: "Mr. Doe's 10th Grade Science Class",
-        location: "Nature Preserve",
-    },
+        title: "Art History Trip",
+        location: "1280 Peachtree St NE, Atlanta, GA 30309, USA",
+    }
 ];
 
 const gradeTrips = [
@@ -66,58 +62,8 @@ export const Dashboard = () => {
     return (
         <Box display="flex" flexGrow={1} width="100%">
             <Container>
-                {/* Permission Progress Cards */}
-				<Typography variant="h6" fontWeight="bold" mt={4} mb={2}>Permission Slip Progress</Typography>
-                <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
-                    {tripData.map((trip, index) => (
-                        <Box key={index} sx={{ flex: 1, minWidth: '300px', mb: 3 }}>
-                            <StyledPaper elevation={3}>
-								<Box sx={{ padding: 2}}>
-									<Typography fontWeight="bold" gutterBottom>
-										{trip.title}
-									</Typography>
-									<Box display="flex" flexDirection="column" alignItems="center">
-										<CircularProgressBox>
-											<CircularProgress
-												variant="determinate"
-												value={100}
-												size={120}
-												thickness={4}
-												sx={{ 
-													color: '#eee',
-													position: 'absolute'
-												}}
-											/>
-											<CircularProgress
-												variant="determinate"
-												value={trip.signed / trip.total * 100}
-												size={120}
-												thickness={4}
-												sx={{ 
-													color: trip.color 
-												}}
-											/>
-											<ProgressLabel variant="h6">
-												{`${trip.signed / trip.total * 100}%`}
-											</ProgressLabel>
-										</CircularProgressBox>
-										<Box sx={{ mt: 2, width: '100%' }}>
-											<Typography variant="body2" color="text.secondary">
-												{trip.signed} Parents Signed
-											</Typography>
-											<Typography variant="body2" color="text.secondary">
-												{trip.total - trip.signed} Parents Have Not Signed
-											</Typography>
-										</Box>
-									</Box>
-								</Box>
-                            </StyledPaper>
-                        </Box>
-                    ))}
-                </Box>
-
-                {/* Second Row - Grade Trips and Proposed Trips */}
-                <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+                {/* Grade Trips and Proposed Trips */}
+                <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap', mt: 4, mb: 2 }}>
                     <Box sx={{ flex: 1, minWidth: '300px', mb: 3 }}>
                         <StyledPaper elevation={3}>
 							<Box sx={{ padding: 2 }}>
@@ -171,6 +117,56 @@ export const Dashboard = () => {
 							</Box>
                         </StyledPaper>
                     </Box>
+                </Box>
+
+				{/* Permission Progress Cards */}
+				<Typography variant="h6" fontWeight="bold" mb={2}>Permission Slip Progress</Typography>
+                <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+                    {tripData.map((trip, index) => (
+                        <Box key={index} sx={{ flex: 1, minWidth: '300px', mb: 3 }}>
+                            <StyledPaper elevation={3}>
+								<Box sx={{ padding: 2}}>
+									<Typography fontWeight="bold" gutterBottom>
+										{trip.title}
+									</Typography>
+									<Box display="flex" flexDirection="column" alignItems="center">
+										<CircularProgressBox>
+											<CircularProgress
+												variant="determinate"
+												value={100}
+												size={120}
+												thickness={4}
+												sx={{ 
+													color: '#eee',
+													position: 'absolute'
+												}}
+											/>
+											<CircularProgress
+												variant="determinate"
+												value={trip.signed / trip.total * 100}
+												size={120}
+												thickness={4}
+												sx={{ 
+													color: trip.color 
+												}}
+											/>
+											<ProgressLabel variant="h6">
+												{`${trip.signed / trip.total * 100}%`}
+											</ProgressLabel>
+										</CircularProgressBox>
+										<Box sx={{ mt: 2, width: '100%' }}>
+											<Typography variant="body2" color="text.secondary">
+												{trip.signed} Parents Signed
+											</Typography>
+											<Typography variant="body2" color="text.secondary">
+												{trip.total - trip.signed} Parents Have Not Signed
+											</Typography>
+										</Box>
+									</Box>
+								</Box>
+                            </StyledPaper>
+                        </Box>
+                    ))}
                 </Box>
             </Container>
         </Box>
