@@ -15,7 +15,7 @@ import {
     Typography  
 } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
-import studentData from '../../Data/students.json'; // dummy data
+import studentData from '../../data/students.json'; // dummy data
 
 const StudentRoster = ({ data }) => {
     // get and sort students for the selected period

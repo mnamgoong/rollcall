@@ -14,7 +14,7 @@ import {
     TableRow,
     Paper, 
 } from "@mui/material";
-import studentData from '../../Data/students.json'; // dummy data
+import studentData from '../../data/students.json'; // dummy data
 
 const Transportation = ({ data }) => {
     // calculate total counts
