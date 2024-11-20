@@ -1,0 +1,364 @@
+{
+    "students": [
+      {
+        "name": "Emma Thompson",
+        "period": 1,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Liam Rodriguez",
+        "period": 1,
+        "specialEd": true,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "Asthma"
+      },
+      {
+        "name": "Sophia Chen",
+        "period": 1,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "Peanut allergy"
+      },
+      {
+        "name": "Noah Williams",
+        "period": 1,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Ava Martinez",
+        "period": 1,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Mason Brown",
+        "period": 1,
+        "specialEd": true,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "Diabetes"
+      },
+      {
+        "name": "Isabella Taylor",
+        "period": 1,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Lucas Garcia",
+        "period": 1,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Mia Johnson",
+        "period": 1,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "Lactose intolerant"
+      },
+      {
+        "name": "Ethan Lee",
+        "period": 1,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Amelia Wilson",
+        "period": 1,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Alexander Davis",
+        "period": 1,
+        "specialEd": true,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Harper Anderson",
+        "period": 1,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Benjamin Moore",
+        "period": 1,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "Asthma"
+      },
+      {
+        "name": "Evelyn White",
+        "period": 1,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "William Jackson",
+        "period": 2,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Charlotte Martin",
+        "period": 2,
+        "specialEd": true,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "James Thompson",
+        "period": 2,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "Gluten allergy"
+      },
+      {
+        "name": "Scarlett Lewis",
+        "period": 2,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Henry Clark",
+        "period": 2,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Victoria Rodriguez",
+        "period": 2,
+        "specialEd": true,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Daniel Kim",
+        "period": 2,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Luna Patel",
+        "period": 2,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "Peanut allergy"
+      },
+      {
+        "name": "Sebastian Scott",
+        "period": 2,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Grace Turner",
+        "period": 2,
+        "specialEd": true,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Jack Phillips",
+        "period": 2,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Chloe Adams",
+        "period": 2,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "Asthma"
+      },
+      {
+        "name": "Owen Campbell",
+        "period": 2,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Zoe Mitchell",
+        "period": 2,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Gabriel Roberts",
+        "period": 2,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Lily Carter",
+        "period": 3,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "David Nelson",
+        "period": 3,
+        "specialEd": true,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Layla Hill",
+        "period": 3,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "Lactose intolerant"
+      },
+      {
+        "name": "Christopher Baker",
+        "period": 3,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Nora Rivera",
+        "period": 3,
+        "specialEd": true,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Joseph Cooper",
+        "period": 3,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Aurora Morgan",
+        "period": 3,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "Peanut allergy"
+      },
+      {
+        "name": "Samuel Reed",
+        "period": 3,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Hannah Bailey",
+        "period": 3,
+        "specialEd": true,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Andrew Kelly",
+        "period": 3,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "Asthma"
+      },
+      {
+        "name": "Elena Howard",
+        "period": 3,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Matthew Cox",
+        "period": 3,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Sarah Ward",
+        "period": 3,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "Diabetes"
+      },
+      {
+        "name": "Ryan Foster",
+        "period": 3,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      },
+      {
+        "name": "Audrey Gray",
+        "period": 3,
+        "specialEd": false,
+        "permissionSlip": false,
+        "payment": false,
+        "healthConditions": "None"
+      }
+    ]
+  }

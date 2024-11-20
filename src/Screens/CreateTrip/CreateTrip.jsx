@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { 
     Box, 
     Container, 
@@ -30,13 +30,15 @@ const CreateTrip = () => {
     const [formData, setFormData] = useState({
         basicInformation: {
             tripName: '',
+            tripType: '',
             mainDestination: '',
-            destinationLocation: '',
             startDate: '',
             endDate: '',
             overnight: false,
             outOfState: false,
             international: false,
+            tripPurpose: '',
+            athleticEvent: '',
             subjectArea: '',
             activityDescription: '',
             curriculumRelation: '',
@@ -142,92 +144,8 @@ const CreateTrip = () => {
         }));
     }, []);
 
-    // function to check if a section is complete
-    const checkSectionCompletion = useCallback((section) => {
-        console.log(`Checking completion for ${section}:`, formData[section]);
-    
-        if (!formData[section]) {
-            console.log(`No data for ${section}`);
-            return false;
-        }
-        
-        const data = formData[section];
-        
-        switch (section) {
-            case 'basicInformation':
-                const requiredFields = [
-                    'tripName',
-                    'mainDestination',
-                    'destinationLocation',
-                    'startDate',
-                    'subjectArea',
-                    'activityDescription',
-                    'curriculumRelation',
-                    'arrangements',
-                    'eligibilityCriteria'
-                ];
-                return requiredFields.every(field => Boolean(data[field]));
-                
-            case 'transportation':
-                return Boolean(
-                    data.walking || 
-                    data.car || 
-                    data.bus || 
-                    data.charterBus || 
-                    data.train || 
-                    data.plane || 
-                    data.other ||
-                    data.accommodations
-                );
-                
-            case 'studentRoster':
-                return Boolean(data.classSelection);
-                
-            case 'adultRoster':
-                return Boolean(data.staff?.length > 0 || data.chaperones?.length > 0);
-                
-            case 'funding':
-                return Boolean(
-                    data.fundingSource && 
-                    data.costPerStudent && 
-                    data.totalCost
-                );
-                
-            case 'documents':
-                return Boolean(data.uploadedFiles?.length > 0);
-                
-            default:
-                return false;
-        }
-    }, [formData]);
-
-    // update completion status whenever form data changes
-    // useEffect(() => {
-    //     const currentSection = Object.keys(completedSteps)[activeTab];
-    //     const newCompletedSteps = { ...completedSteps };
-        
-    //     console.log(`Checking current section: ${currentSection}`);
-    //     newCompletedSteps[currentSection] = checkSectionCompletion(currentSection);
-        
-    //     console.log('Section completion status:', newCompletedSteps[currentSection]);
-    //     setCompletedSteps(newCompletedSteps);
-    // }, [formData, activeTab, completedSteps, checkSectionCompletion]);    
-
     // navigation functions
     const handleNext = () => {
-        // const currentSection = Object.keys(completedSteps)[activeTab];
-        // const isCurrentSectionComplete = checkSectionCompletion(currentSection);
-    
-        // if (!isCurrentSectionComplete) {
-        //     alert('Please complete all required fields before proceeding.');
-        //     return;
-        // }
-    
-        // if (activeTab < sections.length - 1) {
-        //     setActiveTab(prev => prev + 1);
-        // } else {
-        //     handleSubmit();
-        // }
         if (activeTab < sections.length - 1) {
             setActiveTab(prev => prev + 1);
         } else {
@@ -247,13 +165,15 @@ const CreateTrip = () => {
             trips: [{
                 id: `TRIP_${Date.now()}`,
                 tripName: formData.basicInformation.tripName,
+                tripType: formData.basicInformation.tripType,
                 mainDestination: formData.basicInformation.mainDestination,
-                destinationLocation: formData.basicInformation.destinationLocation,
                 startDate: formData.basicInformation.startDate,
                 endDate: formData.basicInformation.endDate,
                 overnight: formData.basicInformation.overnight,
                 outOfState: formData.basicInformation.outOfState,
-                international: formData.basicInformation.outOfState,
+                international: formData.basicInformation.international,
+                tripPurpose: formData.basicInformation.tripPurpose,
+                athleticEvent: formData.basicInformation.athleticEvent,
                 subjectArea: formData.basicInformation.subjectArea,
                 activityDescription: formData.basicInformation.activityDescription,
                 curriculumRelation: formData.basicInformation.curriculumRelation,

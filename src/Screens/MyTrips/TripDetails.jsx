@@ -3,8 +3,9 @@ import {
     Box, 
     Button, 
     Container,
+    CircularProgress,
+    Divider,
     Typography,
-    Divider, 
 } from "@mui/material";
 import ViewProgressTracker from './ViewProgressTracker'; 
 import BasicInformation from "./BasicInformation";
@@ -37,7 +38,16 @@ const TripDetails = ({ tripId, onBack }) => {
     }, [tripId]);
 
     if (isLoading) {
-        return <Typography sx={{ mt: 10 }}>LOADING TRIP DETAILS...</Typography>;
+        return (
+            <Box 
+                display="flex" 
+                justifyContent="center" 
+                alignItems="center" 
+                minHeight="80vh"
+            >
+                <CircularProgress size={60} />
+            </Box>
+        );
     }
 
     if (!tripData) {

@@ -63,7 +63,7 @@ app.get('/gettrips', async function(req, res) {
       id: item.id,
       tripName: item.tripName || item.title || '', // Handle both field names
       mainDestination: item.mainDestination || item.location || '', // Handle both field names
-      startDate: item.startDate || item.tripDates || '', // Handle both field names
+      startDate: item.startDate || '', // Handle both field names
       endDate: item.endDate || '',
       status: item.status || 'PENDING'
     }));

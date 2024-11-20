@@ -6,6 +6,7 @@ import {
 import { 
     Box, 
     Button,
+    CircularProgress,
     Container,
     Divider, 
     Grid, 
@@ -59,6 +60,20 @@ const Overview = () => {
 
     if (selectedTripId) {
         return <TripDetails tripId={selectedTripId} onBack={handleBackToOverview} />;
+    }
+
+
+    if (isLoading) {
+        return (
+            <Box 
+                display="flex" 
+                justifyContent="center" 
+                alignItems="center" 
+                minHeight="80vh"
+            >
+                <CircularProgress size={60} />
+            </Box>
+        );
     }
 
     return (

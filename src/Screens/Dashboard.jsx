@@ -1,4 +1,4 @@
-import { Container, Grid, Paper, Typography, Box, CircularProgress } from "@mui/material";
+import { Grid, Paper, Typography, Box, CircularProgress } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 // styled components
