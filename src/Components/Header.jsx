@@ -17,7 +17,10 @@ const Header = () => {
 					Hi, Mr. Peabody!
 				</Typography>
 				<IconButton color="inherit">
-					<Badge badgeContent={1} color="error">
+					{/* <Badge badgeContent={1} color="error">
+						<Notifications />
+					</Badge> */}
+					<Badge>
 						<Notifications />
 					</Badge>
 				</IconButton>

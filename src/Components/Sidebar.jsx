@@ -7,17 +7,20 @@ import Luggage from "@mui/icons-material/Luggage";
 import { Box, Button, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import { get } from 'aws-amplify/api';
 
-const Sidebar = ({onSelectPage}) => {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [selectedItem, setSelectedItem] = useState('createTrip');
+// Navigation configuration
+const navigationItems = [
+    { id: 'Dashboard', icon: Dashboard },
+    { id: 'Create a Trip', icon: LocationOn },
+    { id: 'My Trips', icon: Luggage },
+    { id: 'Help', icon: HelpOutline }
+];
 
+const Sidebar = ({onSelectPage}) => {
+    const [selectedItem, setSelectedItem] = useState('Dashboard');
+
+    // handler for My Trips API call
     const handleMyTripsClick = async () => {
         console.log('My Trips clicked');
-        setSelectedItem('myTrips');
-        setLoading(true);
-        setError(null);
-
         try {
             console.log('Making API call to gettrips');
             const response = await get({
@@ -31,70 +34,83 @@ const Sidebar = ({onSelectPage}) => {
                 name: error.name,
                 code: error.code
             });
-            setError('Failed to fetch trips: ' + error.message);
-        } finally {
-            setLoading(false);
         }
+    };
+
+    // handler for all navigation items
+    const handleItemClick = (itemId) => {
+        setSelectedItem(itemId);
+        if (itemId === 'My Trips') {
+            handleMyTripsClick();
+        }
+        onSelectPage(itemId);
     };
 
     return (
         <Box
-			width="20vw"
-			height="100vh"
-			bgcolor="white"
-			display="flex"
-			flexDirection="column"
-			position="fixed" 
-		>
-			<Box display="flex" flexDirection="column" alignItems="center" p={2} flexGrow={1}>
-				{/* rollCall logo */}
-				<Box display="flex" alignItems="center" mb={4}>
-					<img
-						src={require("../Images/logo64.png")}
-						alt="Logo"
-						style={{ width: 50, height: 50 }}
-					/>
-					<Typography variant="h4" fontWeight="bold" ml={2}>
-						RollCall
-					</Typography>
-				</Box>
+            width="20vw"
+            height="100vh"
+            bgcolor="white"
+            display="flex"
+            flexDirection="column"
+            position="fixed" 
+        >
+            <Box display="flex" flexDirection="column" alignItems="center" p={2} flexGrow={1}>
+                {/* RollCall Logo and Title */}
+                <Box display="flex" alignItems="center" mb={4}>
+                    <img
+                        src={require("../Images/logo64.png")}
+                        alt="Logo"
+                        style={{ width: 50, height: 50 }}
+                    />
+                    <Typography variant="h4" fontWeight="bold" ml={2}>
+                        RollCall
+                    </Typography>
+                </Box>
 
-				{/* page navigation */}
-				<List>
-					<ListItem button onClick={() => onSelectPage("Dashboard")}>
-						<ListItemIcon><Dashboard /></ListItemIcon>
-						<ListItemText primary="Dashboard" />
-					</ListItem>
-					<ListItem button onClick={() => onSelectPage("Create a Trip")}>
-						<ListItemIcon><LocationOn /></ListItemIcon>
-						<ListItemText primary="Create a Trip" />
-					</ListItem>
-					<ListItem button onClick={() => {
-						handleMyTripsClick();
-						onSelectPage("My Trips");
-					}}>
-						<ListItemIcon><Luggage /></ListItemIcon>
-						<ListItemText primary="My Trips" />
-					</ListItem>
-					<ListItem button onClick={() => onSelectPage("Help")}>
-						<ListItemIcon><HelpOutline /></ListItemIcon>
-						<ListItemText primary="Help" />
-					</ListItem>
-				</List>
+                {/* Navigation Menu */}
+                <List sx={{ width: '100%', px: 2 }}> 
+                    {navigationItems.map(({ id, icon: Icon }) => (
+                        <ListItem 
+                            key={id}
+                            button 
+                            onClick={() => handleItemClick(id)}
+                            sx={{
+                                bgcolor: selectedItem === id ? '#f5f5f5' : 'transparent',
+                                borderRadius: '8px',
+                                mb: 1, 
+                                '&:hover': {
+                                    bgcolor: selectedItem === id 
+                                        ? '#f5f5f5' 
+                                        : 'rgba(0, 0, 0, 0.04)'
+                                }
+                            }}
+                        >
+                            <ListItemIcon><Icon /></ListItemIcon>
+                            <ListItemText primary={id} />
+                        </ListItem>
+                    ))}
+                </List>
 
-				{/* logout button */}
-				<Box position="fixed" bottom={20} display="flex" justifyContent="center" width="20vw">
-					<Button
-						variant="contained"
-						color="error"
-						startIcon={<Logout />}
-					>
-						Log Out
-					</Button>
-				</Box>
-			</Box>
-		</Box>
-	);
+                {/* Logout Button */}
+                <Box 
+                    position="fixed" 
+                    bottom={20} 
+                    display="flex" 
+                    justifyContent="center" 
+                    width="20vw"
+                >
+                    <Button
+                        variant="contained"
+                        color="error"
+                        startIcon={<Logout />}
+                    >
+                        Log Out
+                    </Button>
+                </Box>
+            </Box>
+        </Box>
+    );
 };
 
 export default Sidebar;
