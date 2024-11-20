@@ -30,9 +30,9 @@ const StudentRoster = ({ data, updateData }) => {
                             <MenuItem value="" disabled>
                                 <em>- Select -</em>
                             </MenuItem>
-                            <MenuItem value="Class 1">Class 1</MenuItem>
-                            <MenuItem value="Class 2">Class 2</MenuItem>
-                            <MenuItem value="Class 3">Class 3</MenuItem>
+                            <MenuItem value="Period 1">Period 1</MenuItem>
+                            <MenuItem value="Period 2">Period 2</MenuItem>
+                            <MenuItem value="Period 3">Period 3</MenuItem>
                         </Select>
                     </FormControl>
                 </Grid>

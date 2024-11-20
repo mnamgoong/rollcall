@@ -1,7 +1,8 @@
 {
     "students": [
       {
-        "name": "Emma Thompson",
+        "firstName": "Emma",
+        "lastName": "Thompson",
         "period": 1,
         "specialEd": false,
         "permissionSlip": false,
@@ -9,7 +10,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Liam Rodriguez",
+        "firstName": "Liam",
+        "lastName": "Rodriguez",
         "period": 1,
         "specialEd": true,
         "permissionSlip": false,
@@ -17,7 +19,8 @@
         "healthConditions": "Asthma"
       },
       {
-        "name": "Sophia Chen",
+        "firstName": "Sophia",
+        "lastName": "Chen",
         "period": 1,
         "specialEd": false,
         "permissionSlip": false,
@@ -25,7 +28,8 @@
         "healthConditions": "Peanut allergy"
       },
       {
-        "name": "Noah Williams",
+        "firstName": "Noah",
+        "lastName": "Williams",
         "period": 1,
         "specialEd": false,
         "permissionSlip": false,
@@ -33,7 +37,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Ava Martinez",
+        "firstName": "Ava",
+        "lastName": "Martinez",
         "period": 1,
         "specialEd": false,
         "permissionSlip": false,
@@ -41,7 +46,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Mason Brown",
+        "firstName": "Mason",
+        "lastName": "Brown",
         "period": 1,
         "specialEd": true,
         "permissionSlip": false,
@@ -49,7 +55,8 @@
         "healthConditions": "Diabetes"
       },
       {
-        "name": "Isabella Taylor",
+        "firstName": "Isabella",
+        "lastName": "Taylor",
         "period": 1,
         "specialEd": false,
         "permissionSlip": false,
@@ -57,7 +64,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Lucas Garcia",
+        "firstName": "Lucas",
+        "lastName": "Garcia",
         "period": 1,
         "specialEd": false,
         "permissionSlip": false,
@@ -65,7 +73,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Mia Johnson",
+        "firstName": "Mia",
+        "lastName": "Johnson",
         "period": 1,
         "specialEd": false,
         "permissionSlip": false,
@@ -73,7 +82,8 @@
         "healthConditions": "Lactose intolerant"
       },
       {
-        "name": "Ethan Lee",
+        "firstName": "Ethan",
+        "lastName": "Lee",
         "period": 1,
         "specialEd": false,
         "permissionSlip": false,
@@ -81,7 +91,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Amelia Wilson",
+        "firstName": "Amelia",
+        "lastName": "Wilson",
         "period": 1,
         "specialEd": false,
         "permissionSlip": false,
@@ -89,7 +100,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Alexander Davis",
+        "firstName": "Alexander",
+        "lastName": "Davis",
         "period": 1,
         "specialEd": true,
         "permissionSlip": false,
@@ -97,7 +109,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Harper Anderson",
+        "firstName": "Harper",
+        "lastName": "Anderson",
         "period": 1,
         "specialEd": false,
         "permissionSlip": false,
@@ -105,7 +118,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Benjamin Moore",
+        "firstName": "Benjamin",
+        "lastName": "Moore",
         "period": 1,
         "specialEd": false,
         "permissionSlip": false,
@@ -113,7 +127,8 @@
         "healthConditions": "Asthma"
       },
       {
-        "name": "Evelyn White",
+        "firstName": "Evelyn",
+        "lastName": "White",
         "period": 1,
         "specialEd": false,
         "permissionSlip": false,
@@ -121,7 +136,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "William Jackson",
+        "firstName": "William",
+        "lastName": "Jackson",
         "period": 2,
         "specialEd": false,
         "permissionSlip": false,
@@ -129,7 +145,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Charlotte Martin",
+        "firstName": "Charlotte",
+        "lastName": "Martin",
         "period": 2,
         "specialEd": true,
         "permissionSlip": false,
@@ -137,7 +154,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "James Thompson",
+        "firstName": "James",
+        "lastName": "Thompson",
         "period": 2,
         "specialEd": false,
         "permissionSlip": false,
@@ -145,7 +163,8 @@
         "healthConditions": "Gluten allergy"
       },
       {
-        "name": "Scarlett Lewis",
+        "firstName": "Scarlett",
+        "lastName": "Lewis",
         "period": 2,
         "specialEd": false,
         "permissionSlip": false,
@@ -153,7 +172,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Henry Clark",
+        "firstName": "Henry",
+        "lastName": "Clark",
         "period": 2,
         "specialEd": false,
         "permissionSlip": false,
@@ -161,7 +181,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Victoria Rodriguez",
+        "firstName": "Victoria",
+        "lastName": "Rodriguez",
         "period": 2,
         "specialEd": true,
         "permissionSlip": false,
@@ -169,7 +190,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Daniel Kim",
+        "firstName": "Daniel",
+        "lastName": "Kim",
         "period": 2,
         "specialEd": false,
         "permissionSlip": false,
@@ -177,7 +199,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Luna Patel",
+        "firstName": "Luna",
+        "lastName": "Patel",
         "period": 2,
         "specialEd": false,
         "permissionSlip": false,
@@ -185,7 +208,8 @@
         "healthConditions": "Peanut allergy"
       },
       {
-        "name": "Sebastian Scott",
+        "firstName": "Sebastian",
+        "lastName": "Scott",
         "period": 2,
         "specialEd": false,
         "permissionSlip": false,
@@ -193,7 +217,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Grace Turner",
+        "firstName": "Grace",
+        "lastName": "Turner",
         "period": 2,
         "specialEd": true,
         "permissionSlip": false,
@@ -201,7 +226,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Jack Phillips",
+        "firstName": "Jack",
+        "lastName": "Phillips",
         "period": 2,
         "specialEd": false,
         "permissionSlip": false,
@@ -209,7 +235,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Chloe Adams",
+        "firstName": "Chloe",
+        "lastName": "Adams",
         "period": 2,
         "specialEd": false,
         "permissionSlip": false,
@@ -217,7 +244,8 @@
         "healthConditions": "Asthma"
       },
       {
-        "name": "Owen Campbell",
+        "firstName": "Owen",
+        "lastName": "Campbell",
         "period": 2,
         "specialEd": false,
         "permissionSlip": false,
@@ -225,7 +253,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Zoe Mitchell",
+        "firstName": "Zoe",
+        "lastName": "Mitchell",
         "period": 2,
         "specialEd": false,
         "permissionSlip": false,
@@ -233,7 +262,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Gabriel Roberts",
+        "firstName": "Gabriel",
+        "lastName": "Roberts",
         "period": 2,
         "specialEd": false,
         "permissionSlip": false,
@@ -241,7 +271,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Lily Carter",
+        "firstName": "Lily",
+        "lastName": "Carter",
         "period": 3,
         "specialEd": false,
         "permissionSlip": false,
@@ -249,7 +280,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "David Nelson",
+        "firstName": "David",
+        "lastName": "Nelson",
         "period": 3,
         "specialEd": true,
         "permissionSlip": false,
@@ -257,7 +289,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Layla Hill",
+        "firstName": "Layla",
+        "lastName": "Hill",
         "period": 3,
         "specialEd": false,
         "permissionSlip": false,
@@ -265,7 +298,8 @@
         "healthConditions": "Lactose intolerant"
       },
       {
-        "name": "Christopher Baker",
+        "firstName": "Christopher",
+        "lastName": "Baker",
         "period": 3,
         "specialEd": false,
         "permissionSlip": false,
@@ -273,7 +307,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Nora Rivera",
+        "firstName": "Nora",
+        "lastName": "Rivera",
         "period": 3,
         "specialEd": true,
         "permissionSlip": false,
@@ -281,7 +316,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Joseph Cooper",
+        "firstName": "Joseph",
+        "lastName": "Cooper",
         "period": 3,
         "specialEd": false,
         "permissionSlip": false,
@@ -289,7 +325,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Aurora Morgan",
+        "firstName": "Aurora",
+        "lastName": "Morgan",
         "period": 3,
         "specialEd": false,
         "permissionSlip": false,
@@ -297,7 +334,8 @@
         "healthConditions": "Peanut allergy"
       },
       {
-        "name": "Samuel Reed",
+        "firstName": "Samuel",
+        "lastName": "Reed",
         "period": 3,
         "specialEd": false,
         "permissionSlip": false,
@@ -305,7 +343,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Hannah Bailey",
+        "firstName": "Hannah",
+        "lastName": "Bailey",
         "period": 3,
         "specialEd": true,
         "permissionSlip": false,
@@ -313,7 +352,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Andrew Kelly",
+        "firstName": "Andrew",
+        "lastName": "Kelly",
         "period": 3,
         "specialEd": false,
         "permissionSlip": false,
@@ -321,7 +361,8 @@
         "healthConditions": "Asthma"
       },
       {
-        "name": "Elena Howard",
+        "firstName": "Elena",
+        "lastName": "Howard",
         "period": 3,
         "specialEd": false,
         "permissionSlip": false,
@@ -329,7 +370,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Matthew Cox",
+        "firstName": "Matthew",
+        "lastName": "Cox",
         "period": 3,
         "specialEd": false,
         "permissionSlip": false,
@@ -337,7 +379,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Sarah Ward",
+        "firstName": "Sarah",
+        "lastName": "Ward",
         "period": 3,
         "specialEd": false,
         "permissionSlip": false,
@@ -345,7 +388,8 @@
         "healthConditions": "Diabetes"
       },
       {
-        "name": "Ryan Foster",
+        "firstName": "Ryan",
+        "lastName": "Foster",
         "period": 3,
         "specialEd": false,
         "permissionSlip": false,
@@ -353,7 +397,8 @@
         "healthConditions": "None"
       },
       {
-        "name": "Audrey Gray",
+        "firstName": "Audrey",
+        "lastName": "Gray",
         "period": 3,
         "specialEd": false,
         "permissionSlip": false,
