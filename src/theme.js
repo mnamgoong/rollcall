@@ -2,8 +2,8 @@ import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
   typography: {
-    fontFamily: 'sans-serif', 
-    fontSize: 14, 
+    fontFamily: 'Poppins', 
+    fontSize: 15, 
   },
   palette: {
     primary: {

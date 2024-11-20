@@ -63,7 +63,7 @@ const Sidebar = ({onSelectPage}) => {
                         alt="Logo"
                         style={{ width: 50, height: 50 }}
                     />
-                    <Typography variant="h4" fontWeight="bold" ml={2}>
+                    <Typography variant="h4" sx={{ fontFamily: 'Short Stack' }} ml={2}>
                         RollCall
                     </Typography>
                 </Box>
