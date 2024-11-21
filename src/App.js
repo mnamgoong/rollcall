@@ -10,6 +10,7 @@ import CreateTrip from './Screens/CreateTrip/CreateTrip';
 import MyTrips from './Screens/MyTrips/Overview';
 import Help from './Screens/Help';
 
+
 function App() {
 	// state to store the active page
 	const [selectedPage, setSelectedPage] = useState("Dashboard");
@@ -50,3 +51,4 @@ function App() {
 }
 
 export default App;
+

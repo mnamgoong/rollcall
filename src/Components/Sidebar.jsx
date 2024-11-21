@@ -113,4 +113,4 @@ const Sidebar = ({onSelectPage}) => {
     );
 };
 
-export default Sidebar;
+;export default Sidebar

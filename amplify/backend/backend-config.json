@@ -37,6 +37,34 @@
       "service": "API Gateway"
     }
   },
+  "auth": {
+    "rollcallc1f5e965": {
+      "customAuth": false,
+      "dependsOn": [],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [
+          "EMAIL"
+        ],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito"
+    }
+  },
   "function": {
     "displayDataID": {
       "build": true,
@@ -71,6 +99,38 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_displayDataID_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "displayDataID"
+        }
+      ]
+    },
+    "AMPLIFY_function_displayDataID_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "displayDataID"
+        }
+      ]
+    },
+    "AMPLIFY_function_getFormData_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getFormData"
+        }
+      ]
+    },
+    "AMPLIFY_function_getFormData_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getFormData"
+        }
+      ]
+    },
     "AMPLIFY_function_processData_deploymentBucketName": {
       "usedBy": [
         {
