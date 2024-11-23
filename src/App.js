@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Container } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
@@ -9,13 +9,36 @@ import Dashboard from './Screens/Dashboard';
 import CreateTrip from './Screens/CreateTrip/CreateTrip';
 import MyTrips from './Screens/MyTrips/Overview';
 import Help from './Screens/Help';
+import SignIn from './Screens/SignIn';
+import * as Amplify from 'aws-amplify';
 
+import { getCurrentUser, signOut } from 'aws-amplify/auth';
 
 function App() {
-	// state to store the active page
 	const [selectedPage, setSelectedPage] = useState("Dashboard");
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-	// function to handle page change
+	useEffect(() => {
+		checkAuth();
+	}, []);
+
+	const checkAuth = async () => {
+		try {
+			await getCurrentUser();
+			setIsAuthenticated(true);
+		} catch (error) {
+			setIsAuthenticated(false);
+		}
+	};
+
+	if (!isAuthenticated) {
+		return (
+			<ThemeProvider theme={theme}>
+				<SignIn />
+			</ThemeProvider>
+		);
+	}
+
 	const renderPage = () => {
 		switch (selectedPage) {
 			case "Dashboard":
@@ -34,14 +57,8 @@ function App() {
 	return (
 		<ThemeProvider theme={theme}>
 			<Box display="flex">
-				{/* sidebar */}
 				<Sidebar onSelectPage={setSelectedPage} />
-
-				{/* main content */}
-				<Box
-					ml="20vw" // align content next to the sidebar
-					width="80vw" // content area takes up the remaining width
-				>
+				<Box ml="20vw" width="80vw">
 					<Header />
 					<Container sx={{ mt: "10vh" }}>{renderPage()}</Container>
 				</Box>
