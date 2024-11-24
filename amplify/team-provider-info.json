@@ -115,7 +115,7 @@
       "DeploymentBucketName": "amplify-rollcall-vibhagopal-44715-deployment",
       "UnauthRoleName": "amplify-rollcall-vibhagopal-44715-unauthRole",
       "StackName": "amplify-rollcall-vibhagopal-44715",
-      "StackId": "arn:aws:cloudformation:us-east-1:762233761777:stack/amplify-rollcall-vibhagopal-44715/e01b75d0-a76b-11ef-821f-0affd8c950cf",
+      "StackId": "arn:aws:cloudformation:us-east-1:762233761777:stack/amplify-rollcall-vibhagopal-44715/53cfad30-aa8b-11ef-a538-0e3b23bfaf07",
       "AmplifyAppId": "d1gco6deqlx7f6"
     },
     "categories": {
@@ -127,7 +127,7 @@
         },
         "displayDataID": {
           "deploymentBucketName": "amplify-rollcall-vibhagopal-44715-deployment",
-          "s3Key": "amplify-builds/displayDataID-4539744d443661622f4b-build.zip"
+          "s3Key": "amplify-builds/displayDataID-55496c615a4d6c35634d-build.zip"
         },
         "getFormData": {
           "deploymentBucketName": "amplify-rollcall-vibhagopal-44715-deployment",

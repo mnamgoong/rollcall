@@ -1,71 +1,112 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Container } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from './theme';
-import './App.css';
-import Sidebar from './Components/Sidebar';
-import Header from './Components/Header';
-import Dashboard from './Screens/Dashboard';
-import CreateTrip from './Screens/CreateTrip/CreateTrip';
-import MyTrips from './Screens/MyTrips/Overview';
-import Help from './Screens/Help';
-import SignIn from './Screens/SignIn';
-import * as Amplify from 'aws-amplify';
-
-import { getCurrentUser, signOut } from 'aws-amplify/auth';
+import React from 'react';
+import { Button, Box, Typography, CircularProgress } from '@mui/material';
+import { useAuth } from 'react-oidc-context';
 
 function App() {
-	const [selectedPage, setSelectedPage] = useState("Dashboard");
-	const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const auth = useAuth();
 
-	useEffect(() => {
-		checkAuth();
-	}, []);
+  const signoutRedireOut = () => {
+    const clientId = "6ihgv04tth5if17o08l7liq1co"; 
+    const logoutUri = "<logout uri>";  // Provide your logout URI
+    const cognitoDomain = "https://us-east-1mpeeh4bud.auth.us-east-1.amazoncognito.com/login?client_id=6ihgv04tth5if17o08l7liq1co&redirect_uri=https://final.d1gco6deqlx7f6.amplifyapp.com&response_type=code&scope=email+openid+phone";
+    window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
+  };
 
-	const checkAuth = async () => {
-		try {
-			await getCurrentUser();
-			setIsAuthenticated(true);
-		} catch (error) {
-			setIsAuthenticated(false);
-		}
-	};
+  if (auth.isLoading) {
+    return (
+      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" height="100vh">
+        <CircularProgress />
+        <Typography variant="h6" mt={2}>Loading...</Typography>
+      </Box>
+    );
+  }
 
-	if (!isAuthenticated) {
-		return (
-			<ThemeProvider theme={theme}>
-				<SignIn />
-			</ThemeProvider>
-		);
-	}
+  if (auth.error) {
+    return (
+      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" height="100vh">
+        <Typography variant="h6" color="error">Encountering error: {auth.error.message}</Typography>
+      </Box>
+    );
+  }
 
-	const renderPage = () => {
-		switch (selectedPage) {
-			case "Dashboard":
-				return <Dashboard />;
-			case "Create a Trip":
-				return <CreateTrip setSelectedPage={setSelectedPage}/>;
-			case "My Trips":
-				return <MyTrips />;
-			case "Help":
-				return <Help />;
-			default:
-				return <Dashboard />;
-		}
-	};
+  if (auth.isAuthenticated) {
+    return (
+      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" height="100vh">
+        <Typography 
+          variant="h4" 
+          sx={{
+            background: 'linear-gradient(to right, #00c6ff, #0072ff)', 
+            WebkitBackgroundClip: 'text',
+            color: 'transparent',
+            fontWeight: 'bold',
+            marginBottom: 3,
+          }}
+        >
+          Welcome, {auth.user?.profile.email}
+        </Typography>
 
-	return (
-		<ThemeProvider theme={theme}>
-			<Box display="flex">
-				<Sidebar onSelectPage={setSelectedPage} />
-				<Box ml="20vw" width="80vw">
-					<Header />
-					<Container sx={{ mt: "10vh" }}>{renderPage()}</Container>
-				</Box>
-			</Box>
-		</ThemeProvider>
-	);
+        {/* Centered Sign Out Button */}
+        <Box display="flex" justifyContent="center" width="100%">
+          <Button 
+            variant="contained" 
+            color="primary" 
+            onClick={() => auth.removeUser()} 
+            sx={{
+              padding: '10px 20px',
+              fontWeight: 'bold',
+              borderRadius: '50px',
+              boxShadow: 3,
+              backgroundColor: '#0072ff',
+              '&:hover': {
+                backgroundColor: '#00c6ff',
+              },
+            }}
+          >
+            Sign out
+          </Button>
+        </Box>
+      </Box>
+    );
+  }
+
+  return (
+    <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" height="100vh">
+      <Typography 
+        variant="h3" 
+        sx={{
+          background: 'linear-gradient(to right, #00c6ff, #0072ff)', // Ombre blue effect
+          WebkitBackgroundClip: 'text',
+          color: 'transparent',
+          fontWeight: 'bold',
+          marginBottom: 3,
+        }}
+      >
+        RollCall
+      </Typography>
+
+      <Box>
+        <Button 
+          variant="contained" 
+          color="primary" 
+          onClick={() => auth.signinRedirect()} 
+          sx={{
+            display: 'block',
+            marginBottom: 2,
+            padding: '10px 20px',
+            fontWeight: 'bold',
+            borderRadius: '50px',
+            boxShadow: 3,
+            backgroundColor: '#0072ff',
+            '&:hover': {
+              backgroundColor: '#00c6ff',
+            },
+          }}
+        >
+          Sign in
+        </Button>
+      </Box>
+    </Box>
+  );
 }
 
 export default App;
-

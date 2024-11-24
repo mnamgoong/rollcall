@@ -1,36 +1,22 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { AuthProvider } from "react-oidc-context";
 import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { Amplify } from 'aws-amplify';
-import config from './aws-exports';
 
-Amplify.configure({
-    ...config,
-    API: {
-        endpoints: [
-            {
-                name: "sendFormData",
-                endpoint: config.aws_cloud_logic_custom[0].endpoint
-            }
-        ]
-    },
-    Auth: {
-        region: 'us-east-1',
-        userPoolId: 'us-east-1_MpZMXQa4l',
-        userPoolWebClientId: '19umo3t0j5v52lvq8vmidkehtg'
-    }
-});
+const cognitoAuthConfig = {
+  authority: "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_mPEEh4Bud",  // Cognito authority URL
+  client_id: "6ihgv04tth5if17o08l7liq1co",  // Your Cognito client ID
+  redirect_uri: "https://final.d1gco6deqlx7f6.amplifyapp.com",  // URL to redirect after login
+  response_type: "code",  // OAuth response type
+  scope: "email openid phone",  // Scopes to request
+};
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
 root.render(
   <React.StrictMode>
-    <App />
+    <AuthProvider {...cognitoAuthConfig}>
+      <App />
+    </AuthProvider>
   </React.StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
