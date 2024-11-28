@@ -1,111 +1,80 @@
-import React from 'react';
-import { Button, Box, Typography, CircularProgress } from '@mui/material';
+// src/App.js
+import React, { useState } from 'react';
 import { useAuth } from 'react-oidc-context';
+import DashboardLayout from './layouts/DashboardLayout';
+import LoginPage from './Components/auth/LoginPage';
+import LoadingPage from './Components/auth/LoadingPage';
+import ErrorPage from './Components/auth/ErrorPage';
+import Dashboard from './Screens/Dashboard';
+import CreateTrip from './Screens/CreateTrip/CreateTrip';
+import MyTrips from './Screens/MyTrips/Overview';
+import Help from './Screens/Help';
 
 function App() {
   const auth = useAuth();
-
-  const signoutRedireOut = () => {
-    const clientId = "6ihgv04tth5if17o08l7liq1co"; 
-    const logoutUri = "<logout uri>";  // Provide your logout URI
-    const cognitoDomain = "https://us-east-1mpeeh4bud.auth.us-east-1.amazoncognito.com/login?client_id=6ihgv04tth5if17o08l7liq1co&redirect_uri=https://final.d1gco6deqlx7f6.amplifyapp.com&response_type=code&scope=email+openid+phone";
-    window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
-  };
+  const [selectedPage, setSelectedPage] = useState("Dashboard");
 
   if (auth.isLoading) {
-    return (
-      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" height="100vh">
-        <CircularProgress />
-        <Typography variant="h6" mt={2}>Loading...</Typography>
-      </Box>
-    );
+    return <LoadingPage />;
   }
 
   if (auth.error) {
-    return (
-      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" height="100vh">
-        <Typography variant="h6" color="error">Encountering error: {auth.error.message}</Typography>
-      </Box>
-    );
+    return <ErrorPage error={auth.error} />;
+  }
+
+  if (!auth.isAuthenticated) {
+    return <LoginPage onLogin={() => auth.signinRedirect()} />;
   }
 
   if (auth.isAuthenticated) {
-    return (
-      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" height="100vh">
-        <Typography 
-          variant="h4" 
-          sx={{
-            background: 'linear-gradient(to right, #00c6ff, #0072ff)', 
-            WebkitBackgroundClip: 'text',
-            color: 'transparent',
-            fontWeight: 'bold',
-            marginBottom: 3,
-          }}
-        >
-          Welcome, {auth.user?.profile.email}
-        </Typography>
-
-        {/* Centered Sign Out Button */}
-        <Box display="flex" justifyContent="center" width="100%">
-          <Button 
-            variant="contained" 
-            color="primary" 
-            onClick={() => auth.removeUser()} 
-            sx={{
-              padding: '10px 20px',
-              fontWeight: 'bold',
-              borderRadius: '50px',
-              boxShadow: 3,
-              backgroundColor: '#0072ff',
-              '&:hover': {
-                backgroundColor: '#00c6ff',
-              },
-            }}
-          >
-            Sign out
-          </Button>
-        </Box>
-      </Box>
-    );
+    console.log('=== AUTH DEBUG INFO ===');
+    console.log('Profile:', auth.user?.profile);
+    console.log('Name:', auth.user?.profile.name);
+    console.log('Access Token:', auth.user?.access_token);
+    console.log('ID Token:', auth.user?.id_token);
+    console.log('Expires At:', new Date(auth.user?.expires_at * 1000).toLocaleString());
+    console.log('Full Auth Object:', auth);
+    console.log('=== END AUTH DEBUG INFO ===');
   }
 
-  return (
-    <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" height="100vh">
-      <Typography 
-        variant="h3" 
-        sx={{
-          background: 'linear-gradient(to right, #00c6ff, #0072ff)', // Ombre blue effect
-          WebkitBackgroundClip: 'text',
-          color: 'transparent',
-          fontWeight: 'bold',
-          marginBottom: 3,
-        }}
-      >
-        RollCall
-      </Typography>
+  const renderContent = () => {
+    switch (selectedPage) {
+      case "Dashboard":
+        return <Dashboard />;
+      case "Create a Trip":
+        return <CreateTrip setSelectedPage={setSelectedPage} />;
+      case "My Trips":
+        return <MyTrips />;
+      case "Help":
+        return <Help />;
+      default:
+        return <Dashboard />;
+    }
+  };
 
-      <Box>
-        <Button 
-          variant="contained" 
-          color="primary" 
-          onClick={() => auth.signinRedirect()} 
-          sx={{
-            display: 'block',
-            marginBottom: 2,
-            padding: '10px 20px',
-            fontWeight: 'bold',
-            borderRadius: '50px',
-            boxShadow: 3,
-            backgroundColor: '#0072ff',
-            '&:hover': {
-              backgroundColor: '#00c6ff',
-            },
-          }}
-        >
-          Sign in
-        </Button>
-      </Box>
-    </Box>
+  const handleSignOut = async () => {
+    // First clear the local auth state
+    await auth.removeUser();
+    
+    // Then redirect to Cognito logout URL
+    const cognitoDomain = "https://us-east-1mpeeh4bud.auth.us-east-1.amazoncognito.com";
+    const clientId = "6ihgv04tth5if17o08l7liq1co";
+    const logoutUri = "http://localhost:3000"; // or your logout redirect URL
+  
+    window.location.href = 
+      `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
+  };
+
+
+  return (
+    <DashboardLayout
+      userName={auth.user?.profile.name}
+      onSignOut={handleSignOut}
+      selectedPage={selectedPage}
+      onPageSelect={setSelectedPage}
+    >
+      {renderContent()}
+    </DashboardLayout>
   );
 }
 

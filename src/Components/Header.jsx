@@ -2,7 +2,7 @@ import React from 'react';
 import { AppBar, Badge, IconButton, Toolbar, Typography } from "@mui/material";
 import { AccountCircle, Notifications } from "@mui/icons-material";
 
-const Header = () => {
+const Header = ({ userName }) => {
 	return (
 		<AppBar
 			position="fixed"
@@ -14,7 +14,7 @@ const Header = () => {
 		>
 			<Toolbar>
 				<Typography variant="h6" sx={{ flexGrow: 1 }}>
-					Hi, Mr. Peabody!
+				Hi, {userName|| 'Guest'}!
 				</Typography>
 				<IconButton color="inherit">
 					{/* <Badge badgeContent={1} color="error">
