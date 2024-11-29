@@ -5,7 +5,12 @@ import {
     Typography
 } from '@mui/material';
 
-const Success = ({ onViewTrips, onCreateAnother }) => {
+const Success = ({ onViewTrips, onCreateAnother, fetchTrips }) => {
+    const handleViewTrips = async () => {
+        await fetchTrips();
+        onViewTrips();
+    };
+
     return (
         <Box 
             display="flex" 
@@ -24,7 +29,7 @@ const Success = ({ onViewTrips, onCreateAnother }) => {
             <Box display="flex" gap={2}>
                 <Button 
                     variant="contained"
-                    onClick={onViewTrips}
+                    onClick={handleViewTrips}
                 >
                     View My Trips
                 </Button>
