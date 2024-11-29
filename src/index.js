@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { AuthProvider } from "react-oidc-context";
+import { Amplify } from 'aws-amplify';
+import config from './aws-exports';
 import App from './App';
 
 const cognitoAuthConfig = {
@@ -11,6 +13,19 @@ const cognitoAuthConfig = {
   response_type: "code",  // OAuth response type
   scope: "email profile openid phone",  // Scopes to request
 };
+
+// Add Amplify configuration
+Amplify.configure({
+    ...config,
+    API: {
+        endpoints: [
+            {
+                name: "sendFormData",
+                endpoint: config.aws_cloud_logic_custom[0].endpoint
+            }
+        ]
+    }
+});
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

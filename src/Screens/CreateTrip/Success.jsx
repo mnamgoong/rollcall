@@ -4,11 +4,34 @@ import {
     Button, 
     Typography
 } from '@mui/material';
+import { get } from 'aws-amplify/api';
+import { useAuth } from 'react-oidc-context';
 
 const Success = ({ onViewTrips, onCreateAnother, fetchTrips }) => {
+    const auth = useAuth();
     const handleViewTrips = async () => {
-        await fetchTrips();
         onViewTrips();
+        console.log('My Trips clicked');
+        try {
+            const userEmail = auth.user?.profile.email;
+            console.log('Making API call to gettrips');
+            const response = await get({
+                apiName: 'sendFormData',
+                path: '/gettrips',
+                options: {
+                    queryParams: {
+                        email: userEmail
+                    }
+                }
+            });
+            console.log('API Response:', response);
+        } catch (error) {
+            console.error('API Error:', {
+                message: error.message,
+                name: error.name,
+                code: error.code
+            });
+        }
     };
 
     return (

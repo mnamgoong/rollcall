@@ -221,10 +221,8 @@ const CreateTrip = ({ setSelectedPage }) => {
                     costPerStudent: formData.funding.costPerStudent,
                     totalCost: formData.funding.totalCost,
                     uploadedFiles: formData.documents.uploadedFiles,
-                    user: {
-                        email: userEmail,
-                        username: userName,
-                    },
+                    userFullName: userName,
+                    email: userEmail,
                     status: "PENDING",
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString(),

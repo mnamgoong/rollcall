@@ -14,6 +14,7 @@ import {
     Typography,
 } from "@mui/material"; 
 import TripDetails from "./TripDetails";
+import { useAuth } from 'react-oidc-context';
 
 const getStatusColor = (status) => {
     switch (status) {
@@ -48,11 +49,20 @@ const Overview = () => {
     const [selectedTripId, setSelectedTripId] = useState(null);
     const [trips, setTrips] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const auth = useAuth();
 
     useEffect(() => {
         const fetchTrips = async () => {
             try {
-                const response = await fetch('https://olt95t35ea.execute-api.us-east-1.amazonaws.com/dev/gettrips');
+                const userEmail = auth.user?.profile.email;
+                const response = await fetch(
+                    `https://olt95t35ea.execute-api.us-east-1.amazonaws.com/dev/gettrips?email=${encodeURIComponent(userEmail)}`
+                );
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const data = await response.json();
                 setTrips(data.data || []);
             } catch (error) {
@@ -64,7 +74,7 @@ const Overview = () => {
         };
 
         fetchTrips();
-    }, []);
+    }, [auth.user]);
 
     const handleViewDetails = (tripId) => {
         setSelectedTripId(tripId);

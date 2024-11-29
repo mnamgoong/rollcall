@@ -6,6 +6,7 @@ import Logout from "@mui/icons-material/Logout";
 import Luggage from "@mui/icons-material/Luggage";
 import { Box, Button, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import { get } from 'aws-amplify/api';
+import { useAuth } from 'react-oidc-context';
 
 // Navigation configuration
 const navigationItems = [
@@ -17,15 +18,22 @@ const navigationItems = [
 
 const Sidebar = ({ onSelectPage, onSignOut }) => {  // Add onSignOut to props
     const [selectedItem, setSelectedItem] = useState('Dashboard');
+    const auth = useAuth();
 
     // handler for My Trips API call
     const handleMyTripsClick = async () => {
         console.log('My Trips clicked');
         try {
+            const userEmail = auth.user?.profile.email;
             console.log('Making API call to gettrips');
             const response = await get({
                 apiName: 'sendFormData',
-                path: '/gettrips'
+                path: '/gettrips',
+                options: {
+                    queryParams: {
+                        email: userEmail
+                    }
+                }
             });
             console.log('API Response:', response);
         } catch (error) {
