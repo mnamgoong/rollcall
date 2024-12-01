@@ -69,7 +69,7 @@ const TripDetails = ({ tripId, onBack }) => {
     const sections = [
         {
             title: "Basic Information",
-            component: <BasicInformation data={tripData} />
+            component: <BasicInformation data={tripData} disabled={true} />
         },
         {
             title: "Transportation",
