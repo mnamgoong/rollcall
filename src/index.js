@@ -8,8 +8,8 @@ import App from './App';
 const cognitoAuthConfig = {
   authority: "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_mPEEh4Bud",  // Cognito authority URL
   client_id: "6ihgv04tth5if17o08l7liq1co",  // Your Cognito client ID
-  redirect_uri: "http://localhost:3000",  // URL to redirect after login
-  post_logout_redirect_uri: "http://localhost:3000",  // URL to redirect after logout
+  redirect_uri: "https://expo.d1gco6deqlx7f6.amplifyapp.com/",  // URL to redirect after login
+  post_logout_redirect_uri: "https://expo.d1gco6deqlx7f6.amplifyapp.com/",  // URL to redirect after logout
   response_type: "code",  // OAuth response type
   scope: "email profile openid phone",  // Scopes to request
 };
