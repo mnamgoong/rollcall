@@ -7,8 +7,30 @@ import {
 	Select, 
 	Typography 
 } from "@mui/material";
+import { useAuth } from 'react-oidc-context';
 
 const StudentRoster = ({ data, updateData }) => {
+    const [classPeriods, setClassPeriods] = React.useState([]);
+    const auth = useAuth();
+
+    React.useEffect(() => {
+        const fetchClassInfo = async () => {
+            try {
+                const response = await fetch(
+                    `https://u6x8gbfgze.execute-api.us-east-1.amazonaws.com/dev/info?teacherEmail=${auth.user?.profile.email}`,
+                );
+                const responseData = await response.json();
+                const periods = responseData.periods || [];
+                setClassPeriods(periods.map(period => ({ id: period, name: `Period ${period}` })));
+            } catch (error) {
+                console.error('Error fetching class info:', error);
+                setClassPeriods([]);
+            }
+        };
+
+        fetchClassInfo();
+    }, [auth.user?.profile.email]);
+
     const handleChange = (event) => {
         updateData({ classSelection: event.target.value });
     };
@@ -30,9 +52,11 @@ const StudentRoster = ({ data, updateData }) => {
                             <MenuItem value="" disabled>
                                 <em>- Select -</em>
                             </MenuItem>
-                            <MenuItem value="Period 1">Period 1</MenuItem>
-                            <MenuItem value="Period 2">Period 2</MenuItem>
-                            <MenuItem value="Period 3">Period 3</MenuItem>
+                            {classPeriods.map((period) => (
+                                <MenuItem key={period.id} value={period.name}>
+                                    {period.name}
+                                </MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </Grid>

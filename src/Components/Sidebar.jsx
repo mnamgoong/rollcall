@@ -20,7 +20,6 @@ const Sidebar = ({ onSelectPage, onSignOut }) => {  // Add onSignOut to props
     const [selectedItem, setSelectedItem] = useState('Dashboard');
     const auth = useAuth();
 
-    // handler for My Trips API call
     const handleMyTripsClick = async () => {
         console.log('My Trips clicked');
         try {
