@@ -66,33 +66,44 @@ const Documents = ({ data, updateData }) => {
         setFilesToUpload(prevFiles => [...prevFiles, ...newFiles]);
     };
 
+    // const uploadFiles = async () => {
+    //     const uploadPromises = filesToUpload.map(file => {
+    //         const params = {
+    //             Bucket: S3_BUCKET,
+    //             Key: file.name,
+    //             Body: file,
+    //             ContentType: file.type,
+    //         };
+
+    //         return s3.upload(params).promise(); 
+    //     });
+
+    //     try {
+    //         const uploadResults = await Promise.all(uploadPromises);
+
+    //         const newUploadedFiles = uploadResults.map((result, index) => ({
+    //             name: filesToUpload[index].name,
+    //             type: filesToUpload[index].type,
+    //             url: `https://${S3_BUCKET}.s3.${REGION}.amazonaws.com/${filesToUpload[index].name}` // Construct the URL
+    //         }));
+
+    //         updateData({ uploadedFiles: [...data.uploadedFiles, ...newUploadedFiles] });
+    //         setFilesToUpload([]); // Clear files to upload
+    //         setSnackbarOpen(true); // Show success message
+    //     } catch (error) {
+    //         console.error("Error uploading files: ", error);
+    //     }
+    // };
     const uploadFiles = async () => {
-        const uploadPromises = filesToUpload.map(file => {
-            const params = {
-                Bucket: S3_BUCKET,
-                Key: file.name,
-                Body: file,
-                ContentType: file.type,
-            };
+        // Simplified to just store file information
+        const newUploadedFiles = filesToUpload.map(file => ({
+            name: file.name,
+            type: file.type,
+        }));
 
-            return s3.upload(params).promise(); 
-        });
-
-        try {
-            const uploadResults = await Promise.all(uploadPromises);
-
-            const newUploadedFiles = uploadResults.map((result, index) => ({
-                name: filesToUpload[index].name,
-                type: filesToUpload[index].type,
-                url: `https://${S3_BUCKET}.s3.${REGION}.amazonaws.com/${filesToUpload[index].name}` // Construct the URL
-            }));
-
-            updateData({ uploadedFiles: [...data.uploadedFiles, ...newUploadedFiles] });
-            setFilesToUpload([]); // Clear files to upload
-            setSnackbarOpen(true); // Show success message
-        } catch (error) {
-            console.error("Error uploading files: ", error);
-        }
+        updateData({ uploadedFiles: [...data.uploadedFiles, ...newUploadedFiles] });
+        setFilesToUpload([]); // Clear files to upload
+        setSnackbarOpen(true); // Show success message
     };
 
     const handleDeleteFile = (indexToDelete) => {
