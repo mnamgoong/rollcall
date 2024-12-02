@@ -96,64 +96,6 @@
       "service": "Lambda"
     }
   },
-  "parameters": {
-    "AMPLIFY_function_displayDataID_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "displayDataID"
-        }
-      ]
-    },
-    "AMPLIFY_function_displayDataID_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "displayDataID"
-        }
-      ]
-    },
-    "AMPLIFY_function_getFormData_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "getFormData"
-        }
-      ]
-    },
-    "AMPLIFY_function_getFormData_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "getFormData"
-        }
-      ]
-    },
-    "AMPLIFY_function_processData_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "processData"
-        }
-      ]
-    },
-    "AMPLIFY_function_processData_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "processData"
-        }
-      ]
-    },
-    "AMPLIFY_function_processData_storageTripdataName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "processData"
-        }
-      ]
-    }
-  },
   "storage": {
     "TripData": {
       "providerPlugin": "awscloudformation",

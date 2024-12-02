@@ -13,7 +13,7 @@ import Transportation from "./Transportation";
 import StudentRoster from "./StudentRoster"; 
 import AdultRoster from "./AdultRoster"; 
 import Funding from "./Funding";
-import Documents from "./Documents";
+import Documents from "../CreateTrip/Documents";;
 
 const TripDetails = ({ tripId, onBack }) => {
     const [tripData, setTripData] = useState(null);
@@ -133,7 +133,7 @@ const TripDetails = ({ tripId, onBack }) => {
                         onClick={handleNext}
                         disabled={activeTab === sections.length - 1}
                     >
-                        {activeTab === sections.length - 1 ? "Submit" : "Next"}
+                        Next
                     </Button>
                 </Box>
             </Container>

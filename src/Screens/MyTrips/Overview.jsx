@@ -14,6 +14,7 @@ import {
     Typography,
 } from "@mui/material"; 
 import TripDetails from "./TripDetails";
+import EditTrip from "../EditTrips/EditTrip";
 import { useAuth } from 'react-oidc-context';
 
 const getStatusColor = (status) => {
@@ -45,10 +46,11 @@ const getStatusColor = (status) => {
     }
 };
 
-const Overview = () => {
-    const [selectedTripId, setSelectedTripId] = useState(null);
+const Overview = ({ setSelectedPage, setSelectedTripId }) => {
     const [trips, setTrips] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [currentTripId, setCurrentTripId] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
     const auth = useAuth();
 
     useEffect(() => {
@@ -56,17 +58,19 @@ const Overview = () => {
             try {
                 const userEmail = auth.user?.profile.email;
                 const response = await fetch(
-                    `https://olt95t35ea.execute-api.us-east-1.amazonaws.com/dev/gettrips?email=${encodeURIComponent(userEmail)}`
+                    `https://olt95t35ea.execute-api.us-east-1.amazonaws.com/dev/gettrips?email=${encodeURIComponent(
+                        userEmail
+                    )}`
                 );
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
+
                 const data = await response.json();
                 setTrips(data.data || []);
             } catch (error) {
-                console.error('Error fetching trips:', error);
+                console.error("Error fetching trips:", error);
                 setTrips([]);
             } finally {
                 setIsLoading(false);
@@ -76,18 +80,26 @@ const Overview = () => {
         fetchTrips();
     }, [auth.user]);
 
-    const handleViewDetails = (tripId) => {
+    const handleEditTrip = (tripId) => {
         setSelectedTripId(tripId);
+        setSelectedPage("Edit Trip"); 
+    };
+
+    const handleViewDetails = (tripId) => {
+        setCurrentTripId(tripId);
     };
 
     const handleBackToOverview = () => {
-        setSelectedTripId(null);
+        setCurrentTripId(null); 
     };
 
-    if (selectedTripId) {
-        return <TripDetails tripId={selectedTripId} onBack={handleBackToOverview} />;
+    if (currentTripId) {
+        return isEditing ? (
+            <EditTrip tripId={currentTripId} onBack={handleBackToOverview} />
+        ) : (
+            <TripDetails tripId={currentTripId} onBack={handleBackToOverview} />
+        );
     }
-
 
     if (isLoading) {
         return (
@@ -143,6 +155,14 @@ const Overview = () => {
                                         onClick={() => handleViewDetails(trip.id)}
                                     >
                                         View Details
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        fullWidth
+                                        sx={{ mt: 2, bgcolor: "#007FFF" }}
+                                        onClick={() => handleEditTrip(trip.id)}
+                                    >
+                                        Edit
                                     </Button>
                                 </Paper>
                             </Grid>

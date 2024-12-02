@@ -157,5 +157,29 @@
         "rollcallc1f5e965": {}
       }
     }
+  },
+  "vibhaone": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-rollcall-vibhaone-78d49-authRole",
+      "UnauthRoleArn": "arn:aws:iam::762233761777:role/amplify-rollcall-vibhaone-78d49-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::762233761777:role/amplify-rollcall-vibhaone-78d49-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-rollcall-vibhaone-78d49-deployment",
+      "UnauthRoleName": "amplify-rollcall-vibhaone-78d49-unauthRole",
+      "StackName": "amplify-rollcall-vibhaone-78d49",
+      "StackId": "arn:aws:cloudformation:us-east-1:762233761777:stack/amplify-rollcall-vibhaone-78d49/4bc55fb0-b060-11ef-9203-122d03116de9",
+      "AmplifyAppId": "d1gco6deqlx7f6"
+    },
+    "categories": {
+      "auth": {
+        "rollcallc1f5e965": {}
+      },
+      "function": {
+        "displayDataID": {},
+        "getFormData": {},
+        "processData": {},
+        "TripData": {}
+      }
+    }
   }
 }
