@@ -14,7 +14,7 @@ import {
     Typography,
 } from "@mui/material"; 
 import TripDetails from "./TripDetails";
-import EditTrip from "./EditTrip";
+import EditTrip from "../EditTrips/EditTrip";
 import { useAuth } from 'react-oidc-context';
 
 const getStatusColor = (status) => {

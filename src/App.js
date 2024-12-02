@@ -8,7 +8,7 @@ import Dashboard from './Screens/Dashboard';
 import CreateTrip from './Screens/CreateTrip/CreateTrip';
 import MyTrips from './Screens/MyTrips/Overview';
 import Help from './Screens/Help';
-import EditTrip from './Screens/MyTrips/EditTrip'; // Import EditTrip component
+import EditTrip from './Screens/EditTrips/EditTrip'; // Import EditTrip component
 
 function App() {
     const auth = useAuth();

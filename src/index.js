@@ -16,12 +16,14 @@ const cognitoAuthConfig = {
 
 // Add Amplify configuration
 Amplify.configure({
-    ...config,
+   ...config,
     API: {
         endpoints: [
             {
                 name: "sendFormData",
                 endpoint: config.aws_cloud_logic_custom[0].endpoint
+                //"http://localhost:3000"
+                //config.aws_cloud_logic_custom[0].endpoint
             }
         ]
     }
