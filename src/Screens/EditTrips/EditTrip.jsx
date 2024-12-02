@@ -69,6 +69,7 @@ const EditTrip = ({ tripId, onBack }) => {
                         uploadedFiles: data.uploadedFiles || [],
                     },
                 });
+                console.log('Trip details:', formData);
             } catch (error) {
                 console.error('Error fetching trip details:', error);
             } finally {
@@ -86,15 +87,61 @@ const EditTrip = ({ tripId, onBack }) => {
         }));
     };
 
+   
+
     const handleSave = async () => {
+
+        const tripData = {
+            trips: [{
+                id: tripId,
+                tripName: formData.basicInformation.tripName,
+                tripType: formData.basicInformation.tripType,
+                mainDestination: formData.basicInformation.mainDestination,
+                startDate: formData.basicInformation.startDate,
+                endDate: formData.basicInformation.endDate,
+                overnight: formData.basicInformation.overnight,
+                outOfState: formData.basicInformation.outOfState,
+                international: formData.basicInformation.international,
+                tripPurpose: formData.basicInformation.tripPurpose,
+                athleticEvent: formData.basicInformation.athleticEvent,
+                subjectArea: formData.basicInformation.subjectArea,
+                activityDescription: formData.basicInformation.activityDescription,
+                curriculumRelation: formData.basicInformation.curriculumRelation,
+                arrangements: formData.basicInformation.arrangements,
+                eligibilityCriteria: formData.basicInformation.eligibilityCriteria,
+                walking: formData.transportation.walking,
+                car: formData.transportation.car,
+                bus: formData.transportation.bus,
+                charterBus: formData.transportation.charterBus,
+                train: formData.transportation.train,
+                plane: formData.transportation.plane,
+                other: formData.transportation.other,
+                accommodations: formData.transportation.accommodations,
+                classSelection: formData.studentRoster.classSelection,
+                staff: formData.adultRoster.staff,
+                chaperones: formData.adultRoster.chaperones,
+                fundingSource: formData.funding.fundingSource,
+                costPerStudent: formData.funding.costPerStudent,
+                totalCost: formData.funding.totalCost,
+                uploadedFiles: formData.documents.uploadedFiles,
+                status: "PENDING",
+                updatedAt: new Date().toISOString(),
+            }]
+        };
+        
+        console.log('Saving trip details:', JSON.stringify(tripData, null, 2));
         setIsSaving(true);
+        console.log('Saving trip details:', JSON.stringify(formData, null, 2));
+        console.log('Trip ID:', tripId);
+
+
         try {
             const response = await fetch(
                 `https://umkn2by4pf.execute-api.us-east-1.amazonaws.com/default/editTrip/trip/id?id=${tripId}`,
                 {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData),
+                    body: JSON.stringify(tripData),
                 }
             );
 
