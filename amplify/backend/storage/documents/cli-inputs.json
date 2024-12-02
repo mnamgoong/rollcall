@@ -1,0 +1,14 @@
+{
+  "resourceName": "documents",
+  "policyUUID": "f45fab5b",
+  "bucketName": "rollcall-uploaded-documents",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

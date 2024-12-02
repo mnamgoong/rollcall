@@ -11,6 +11,17 @@ export type AmplifyDependentResourcesAttributes = {
       "RootUrl": "string"
     }
   },
+  "auth": {
+    "rollcalleab85e39": {
+      "AppClientID": "string",
+      "AppClientIDWeb": "string",
+      "IdentityPoolId": "string",
+      "IdentityPoolName": "string",
+      "UserPoolArn": "string",
+      "UserPoolId": "string",
+      "UserPoolName": "string"
+    }
+  },
   "function": {
     "displayDataID": {
       "Arn": "string",
@@ -42,6 +53,10 @@ export type AmplifyDependentResourcesAttributes = {
       "PartitionKeyType": "string",
       "Region": "string",
       "StreamArn": "string"
+    },
+    "documents": {
+      "BucketName": "string",
+      "Region": "string"
     }
   }
 }
