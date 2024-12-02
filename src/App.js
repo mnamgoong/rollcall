@@ -72,14 +72,6 @@ function App() {
         }
     };
 
-    const handleSignOut = async () => {
-        await auth.removeUser();
-        const cognitoDomain = "https://us-east-1mpeeh4bud.auth.us-east-1.amazoncognito.com";
-        const clientId = "6ihgv04tth5if17o08l7liq1co";
-        const logoutUri = "http://localhost:3000";
-        window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
-    };
-
     if (auth.isLoading) {
         return <LoadingPage />;
     }
