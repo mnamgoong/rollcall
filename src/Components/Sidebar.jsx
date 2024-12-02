@@ -70,9 +70,9 @@ const Sidebar = ({ onSelectPage, onSignOut }) => {  // Add onSignOut to props
                         alt="Logo"
                         style={{ width: 50, height: 50 }}
                     />
-                    <Typography variant="h4" sx={{ fontFamily: 'Short Stack' }} ml={2}>
+                    {/* <Typography variant="h4" sx={{ fontFamily: 'Short Stack' }} ml={2}>
                         RollCall
-                    </Typography>
+                    </Typography> */}
                 </Box>
 
                 {/* Navigation Menu */}
