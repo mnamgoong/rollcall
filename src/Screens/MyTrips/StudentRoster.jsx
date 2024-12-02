@@ -27,12 +27,6 @@ const StudentRoster = ({ data }) => {
         const userEmail = auth.user?.profile.email;
         const periodNumber = data.classSelection.split(' ')[1];
 
-        console.log('Fetching students with:', {
-            userEmail,
-            periodNumber,
-            tripId: data.id
-        });
-
         try {
             const url = `https://z6u30mgjq5.execute-api.us-east-1.amazonaws.com/dev/students?teacherEmail=${encodeURIComponent(userEmail)}&period=${encodeURIComponent(periodNumber)}&tripId=${encodeURIComponent(data.id)}`;
             console.log('Request URL:', url);
