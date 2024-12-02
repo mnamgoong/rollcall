@@ -81,18 +81,16 @@ const Overview = ({ setSelectedPage, setSelectedTripId }) => {
     }, [auth.user]);
 
     const handleEditTrip = (tripId) => {
-        setCurrentTripId(tripId); 
-        setIsEditing(true);
+        setSelectedTripId(tripId);
+        setSelectedPage("Edit Trip"); 
     };
 
     const handleViewDetails = (tripId) => {
         setCurrentTripId(tripId);
-        setIsEditing(false);
     };
 
     const handleBackToOverview = () => {
         setCurrentTripId(null); 
-        setIsEditing(false); 
     };
 
     if (currentTripId) {

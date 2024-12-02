@@ -8,6 +8,7 @@ import Dashboard from './Screens/Dashboard';
 import CreateTrip from './Screens/CreateTrip/CreateTrip';
 import MyTrips from './Screens/MyTrips/Overview';
 import Help from './Screens/Help';
+import EditTrip from './Screens/MyTrips/EditTrip'; // Import EditTrip component
 
 function App() {
     const auth = useAuth();
@@ -41,26 +42,35 @@ function App() {
     }, [auth.user]);
 
     const renderContent = () => {
-      switch (selectedPage) {
-          case "Create a Trip":
-              return (
-                  <CreateTrip
-                      setSelectedPage={setSelectedPage}
-                      tripData={selectedTripId ? trips.find((trip) => trip.id === selectedTripId) : null}
-                      isEditing={Boolean(selectedTripId)} // Pass whether this is an edit or new trip creation
-                  />
-              );
-          case "My Trips":
-              return (
-                  <MyTrips
-                      setSelectedPage={setSelectedPage}
-                      setSelectedTripId={setSelectedTripId}
-                  />
-              );
-          default:
-              return <Dashboard />;
-      }
-  };
+        switch (selectedPage) {
+            case "Create a Trip":
+                return (
+                    <CreateTrip
+                        setSelectedPage={setSelectedPage}
+                        tripData={selectedTripId ? trips.find((trip) => trip.id === selectedTripId) : null}
+                        isEditing={Boolean(selectedTripId)}
+                    />
+                );
+            case "Edit Trip": // Add routing for EditTrip
+                return (
+                    <EditTrip
+                        tripId={selectedTripId}
+                        onBack={() => setSelectedPage("My Trips")} // Navigate back to My Trips
+                    />
+                );
+            case "My Trips":
+                return (
+                    <MyTrips
+                        setSelectedPage={setSelectedPage}
+                        setSelectedTripId={setSelectedTripId}
+                    />
+                );
+            case "Help":
+                return <Help />;
+            default:
+                return <Dashboard />;
+        }
+    };
 
     const handleSignOut = async () => {
         await auth.removeUser();

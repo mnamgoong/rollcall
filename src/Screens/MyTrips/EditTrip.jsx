@@ -1,47 +1,88 @@
-import React, { useState, useEffect } from "react";
-import {
-    Box,
-    Button,
-    Container,
-    CircularProgress,
-    Divider,
-    Typography,
-} from "@mui/material";
+import React, { useState, useEffect } from 'react';
+import { Box, Container, Typography, Button, CircularProgress } from '@mui/material';
 import ViewProgressTracker from './ViewProgressTracker';
-import BasicInformation from "./BasicInformation";
-import Transportation from "./Transportation";
-import StudentRoster from "./StudentRoster";
-import AdultRoster from "./AdultRoster";
-import Funding from "./Funding";
-import Documents from "../CreateTrip/Documents";
+import BasicInformation from './BasicInformation';
+import Transportation from './Transportation';
+import StudentRoster from './StudentRoster';
+import AdultRoster from './AdultRoster';
+import Funding from './Funding';
+import Documents from './Documents';
 
 const EditTrip = ({ tripId, onBack }) => {
-    const [tripData, setTripData] = useState(null);
+    const [formData, setFormData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState(0);
     const [isSaving, setIsSaving] = useState(false);
+    const [activeTab, setActiveTab] = useState(0);
 
+    // Fetch trip details
     useEffect(() => {
         const fetchTripDetails = async () => {
             try {
                 const response = await fetch(
                     `https://lbeaduxwcl.execute-api.us-east-1.amazonaws.com/default/getTripByID/trip/id?id=${tripId}`
                 );
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
                 const data = await response.json();
-                setTripData(data);
+                setFormData({
+                    basicInformation: {
+                        tripName: data.tripName || '',
+                        tripType: data.tripType || '',
+                        mainDestination: data.mainDestination || '',
+                        startDate: data.startDate || '',
+                        endDate: data.endDate || '',
+                        overnight: data.overnight || false,
+                        outOfState: data.outOfState || false,
+                        international: data.international || false,
+                        tripPurpose: data.tripPurpose || '',
+                        athleticEvent: data.athleticEvent || '',
+                        subjectArea: data.subjectArea || '',
+                        activityDescription: data.activityDescription || '',
+                        curriculumRelation: data.curriculumRelation || '',
+                        arrangements: data.arrangements || '',
+                        eligibilityCriteria: data.eligibilityCriteria || '',
+                    },
+                    transportation: {
+                        walking: data.walking || false,
+                        car: data.car || false,
+                        bus: data.bus || false,
+                        charterBus: data.charterBus || false,
+                        train: data.train || false,
+                        plane: data.plane || false,
+                        other: data.other || '',
+                        accommodations: data.accommodations || '',
+                    },
+                    studentRoster: {
+                        classSelection: data.classSelection || '',
+                    },
+                    adultRoster: {
+                        staff: data.staff || [],
+                        chaperones: data.chaperones || [],
+                    },
+                    funding: {
+                        fundingSource: data.fundingSource || '',
+                        costPerStudent: data.costPerStudent || '',
+                        totalCost: data.totalCost || '',
+                    },
+                    documents: {
+                        uploadedFiles: data.uploadedFiles || [],
+                    },
+                });
             } catch (error) {
                 console.error('Error fetching trip details:', error);
             } finally {
                 setIsLoading(false);
             }
         };
+
         fetchTripDetails();
     }, [tripId]);
 
-    const updateTripData = (section, newData) => {
-        setTripData((prevData) => ({
-            ...prevData,
-            ...newData,
+    const updateFormData = (section, newData) => {
+        setFormData((prev) => ({
+            ...prev,
+            [section]: { ...prev[section], ...newData },
         }));
     };
 
@@ -49,44 +90,84 @@ const EditTrip = ({ tripId, onBack }) => {
         setIsSaving(true);
         try {
             const response = await fetch(
-                `https://lbeaduxwcl.execute-api.us-east-1.amazonaws.com/default/updateTrip?id=${tripId}`,
+                `https://umkn2by4pf.execute-api.us-east-1.amazonaws.com/default/editTrip/trip/id?id=${tripId}`,
                 {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(tripData),
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
                 }
             );
 
             if (!response.ok) {
-                throw new Error("Failed to save trip");
+                throw new Error('Failed to save trip');
             }
 
-            alert("Trip details saved successfully.");
+            alert('Trip details saved successfully.');
             onBack();
         } catch (error) {
-            console.error("Error saving trip details:", error);
-            alert("Failed to save trip details.");
+            console.error('Error saving trip details:', error);
+            alert('Failed to save trip details.');
         } finally {
             setIsSaving(false);
         }
     };
 
-    if (isLoading) {
-        return (
-            <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                minHeight="80vh"
-            >
-                <CircularProgress size={60} />
-            </Box>
-        );
-    }
-
-    if (!tripData) {
-        return <Typography sx={{ mt: 10 }}>FAILED TO LOAD TRIP DETAILS</Typography>;
-    }
+    const sections = [
+        {
+            title: 'Basic Information',
+            component: (
+                <BasicInformation
+                    data={formData?.basicInformation || {}}
+                    updateData={(data) => updateFormData('basicInformation', data)}
+                />
+            ),
+        },
+        {
+            title: 'Transportation',
+            component: (
+                <Transportation
+                    data={formData?.transportation || {}}
+                    updateData={(data) => updateFormData('transportation', data)}
+                />
+            ),
+        },
+        {
+            title: 'Student Roster',
+            component: (
+                <StudentRoster
+                    data={formData?.studentRoster || {}}
+                    updateData={(data) => updateFormData('studentRoster', data)}
+                />
+            ),
+        },
+        {
+            title: 'Adult Roster',
+            component: (
+                <AdultRoster
+                    data={formData?.adultRoster || {}}
+                    updateData={(data) => updateFormData('adultRoster', data)}
+                />
+            ),
+        },
+        {
+            title: 'Funding',
+            component: (
+                <Funding
+                    data={formData?.funding || {}}
+                    updateData={(data) => updateFormData('funding', data)}
+                />
+            ),
+        },
+        {
+            title: 'Documents',
+            component: (
+                <Documents
+                    data={formData?.documents || {}}
+                    updateData={(data) => updateFormData('documents', data)}
+                />
+            ),
+        },
+    ];
 
     const handleNext = () => {
         if (activeTab < sections.length - 1) {
@@ -100,62 +181,13 @@ const EditTrip = ({ tripId, onBack }) => {
         }
     };
 
-    const sections = [
-        {
-            title: "Basic Information",
-            component: (
-                <BasicInformation
-                    data={tripData}
-                    updateData={(data) => updateTripData("basicInformation", data)}
-                />
-            ),
-        },
-        {
-            title: "Transportation",
-            component: (
-                <Transportation
-                    data={tripData}
-                    updateData={(data) => updateTripData("transportation", data)}
-                />
-            ),
-        },
-        {
-            title: "Student Roster",
-            component: (
-                <StudentRoster
-                    data={tripData}
-                    updateData={(data) => updateTripData("studentRoster", data)}
-                />
-            ),
-        },
-        {
-            title: "Adult Roster",
-            component: (
-                <AdultRoster
-                    data={tripData}
-                    updateData={(data) => updateTripData("adultRoster", data)}
-                />
-            ),
-        },
-        {
-            title: "Funding",
-            component: (
-                <Funding
-                    data={tripData}
-                    updateData={(data) => updateTripData("funding", data)}
-                />
-            ),
-        },
-        {
-            title: "Documents",
-            component: (
-                <Documents
-                    data={tripData}
-                    updateData={(data) => updateTripData("documents", data)}
-                />
-            ),
-        },
-    ];
+    if (isLoading) {
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+                <CircularProgress size={60} />
+            </Box>
+        );
+    }
 
     return (
         <Box display="flex" flexGrow={1} width="100%">
@@ -165,15 +197,12 @@ const EditTrip = ({ tripId, onBack }) => {
                         Back
                     </Button>
                 </Box>
-
                 <Typography variant="h5" fontWeight="bold" mt={2}>
                     Edit Trip
                 </Typography>
                 <Typography variant="body1" mb={2}>
-                    ID: {tripData.id}
+                    ID: {tripId}
                 </Typography>
-
-                <Divider sx={{ mb: 2 }}></Divider>
 
                 <ViewProgressTracker
                     steps={sections.map((section) => section.title)}
@@ -194,25 +223,12 @@ const EditTrip = ({ tripId, onBack }) => {
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={handleNext}
-                        disabled={activeTab === sections.length - 1}
+                        onClick={activeTab === sections.length - 1 ? handleSave : handleNext}
+                        disabled={isSaving}
                     >
-                        Next
+                        {activeTab === sections.length - 1 ? (isSaving ? 'Saving...' : 'Save') : 'Next'}
                     </Button>
                 </Box>
-
-                {activeTab === sections.length - 1 && (
-                    <Box display="flex" justifyContent="center" mt={4}>
-                        <Button
-                            variant="contained"
-                            color="success"
-                            onClick={handleSave}
-                            disabled={isSaving}
-                        >
-                            {isSaving ? "Saving..." : "Save Changes"}
-                        </Button>
-                    </Box>
-                )}
             </Container>
         </Box>
     );
