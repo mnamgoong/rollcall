@@ -149,11 +149,24 @@ const StudentRoster = ({ data }) => {
 
     const [searchTerm, setSearchTerm] = useState('');
 
-    // filter students based on search
-    const filteredStudents = students.filter(student => {
-        const fullName = `${student.lastName} ${student.firstName}`.toLowerCase();
-        return fullName.includes(searchTerm.toLowerCase());
-    });
+    const filteredStudents = students
+        .filter(student => {
+            const fullName = `${student.name}`.toLowerCase();
+            return fullName.includes(searchTerm.toLowerCase());
+        })
+        .sort((a, b) => {
+            // First compare by lastName
+            const lastNameComparison = a.name.split(' ')[1]
+                .localeCompare(b.name.split(' ')[1]);
+            
+            // If lastNames are equal, compare by firstName
+            if (lastNameComparison === 0) {
+                return a.name.split(' ')[0]
+                    .localeCompare(b.name.split(' ')[0]);
+            }
+            
+            return lastNameComparison;
+        });
 
     return (
         <Box display="flex" justifyContent="center" width="100%">
@@ -225,10 +238,9 @@ const StudentRoster = ({ data }) => {
                                     ])}
                                 </TableHead>
                                 <TableBody>
-                                {(searchTerm.trim() === '' ? students : filteredStudents).map((student, index) => (
+                                    {filteredStudents.map((student, index) => (
                                         <TableRow key={index}>
                                             <TableCell>
-                                                {/* {`${student.lastName}, ${student.firstName}`} */}
                                                 {student.name}
                                             </TableCell>
                                             <TableCell>
