@@ -131,10 +131,7 @@ const EditTrip = ({ tripId, onBack }) => {
         
         console.log('Saving trip details:', JSON.stringify(tripData, null, 2));
         setIsSaving(true);
-        console.log('Saving trip details:', JSON.stringify(formData, null, 2));
-        console.log('Trip ID:', tripId);
-
-
+        console.log("FormData being sent to API:", JSON.stringify(formData)); // Log formData
         try {
             const response = await fetch(
                 `https://umkn2by4pf.execute-api.us-east-1.amazonaws.com/default/editTrip/trip/id?id=${tripId}`,
@@ -144,20 +141,25 @@ const EditTrip = ({ tripId, onBack }) => {
                     body: JSON.stringify(tripData),
                 }
             );
-
+    
+            console.log("API response:", response); // Log the response object
+    
             if (!response.ok) {
-                throw new Error('Failed to save trip');
+                const errorDetails = await response.text();
+                console.error("Error details:", errorDetails);
+                throw new Error("Failed to save trip");
             }
-
+    
             alert('Trip details saved successfully.');
             onBack();
         } catch (error) {
-            console.error('Error saving trip details:', error);
+            console.error("Error saving trip details:", error);
             alert('Failed to save trip details.');
         } finally {
             setIsSaving(false);
         }
     };
+
 
     const sections = [
         {
