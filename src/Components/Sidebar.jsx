@@ -20,7 +20,6 @@ const Sidebar = ({ onSelectPage, onSignOut }) => {  // Add onSignOut to props
     const [selectedItem, setSelectedItem] = useState('Dashboard');
     const auth = useAuth();
 
-    // handler for My Trips API call
     const handleMyTripsClick = async () => {
         console.log('My Trips clicked');
         try {
@@ -67,13 +66,13 @@ const Sidebar = ({ onSelectPage, onSignOut }) => {  // Add onSignOut to props
                 {/* RollCall Logo and Title */}
                 <Box display="flex" alignItems="center" mb={4}>
                     <img
-                        src={require("../Images/logo64.png")}
+                        src={require("../Images/logo128.png")}
                         alt="Logo"
-                        style={{ width: 50, height: 50 }}
+                        style={{ width: 100, height: 100 }}
                     />
-                    <Typography variant="h4" sx={{ fontFamily: 'Short Stack' }} ml={2}>
+                    {/* <Typography variant="h4" sx={{ fontFamily: 'Short Stack' }} ml={2}>
                         RollCall
-                    </Typography>
+                    </Typography> */}
                 </Box>
 
                 {/* Navigation Menu */}

@@ -1,4 +1,4 @@
-import React from "react"; 
+import React, { useState, useEffect } from "react";
 import { 
 	Box,
     Grid,
@@ -14,17 +14,42 @@ import {
     TableRow,
     Paper, 
 } from "@mui/material";
+import { useAuth } from 'react-oidc-context';
 import studentData from '../../data/students.json'; // dummy data
 
 const Transportation = ({ data }) => {
-    // calculate total counts
-    const totalStudents = data.classSelection ? 
-        studentData.students.filter(student => 
-            student.period === parseInt(data.classSelection.split(' ')[1])
-        ).length || 0 : 0;
+    const [totalStudents, setTotalStudents] = useState(0);
+    const auth = useAuth();
+
+    useEffect(() => {
+        const fetchStudents = async () => {
+            if (auth.user && data.classSelection && data.id) {
+                const userEmail = auth.user?.profile.email;
+                const periodNumber = data.classSelection.split(' ')[1];
+                
+                try {
+                    const url = `https://z6u30mgjq5.execute-api.us-east-1.amazonaws.com/dev/students?teacherEmail=${encodeURIComponent(userEmail)}&period=${encodeURIComponent(periodNumber)}&tripId=${encodeURIComponent(data.id)}`;
+                    const response = await fetch(url);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const responseData = await response.json();
+                    if (responseData && responseData.length > 0) {
+                        setTotalStudents(responseData[0].totalStudents);
+                    }
+                } catch (error) {
+                    console.error('Error fetching students:', error);
+                    setTotalStudents(0);
+                }
+            }
+        };
+
+        fetchStudents();
+    }, [auth.user, data.classSelection, data.id]);
 
     const totalAdults = (data.staff?.length || 0) + (data.chaperones?.length || 0);
-    
     const totalPeople = totalStudents + totalAdults;
     
     const regularEducation = data.classSelection ?

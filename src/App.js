@@ -84,9 +84,22 @@ function App() {
         return <LoadingPage />;
     }
 
+
     if (auth.error) {
         return <ErrorPage error={auth.error} />;
     }
+  const handleSignOut = async () => {
+    // First clear the local auth state
+    await auth.removeUser();
+    
+    // Then redirect to Cognito logout URL
+    const cognitoDomain = "https://us-east-1mpeeh4bud.auth.us-east-1.amazoncognito.com";
+    const clientId = "6ihgv04tth5if17o08l7liq1co";
+    const logoutUri = "https://rollcalltrips.com/"; // or your logout redirect URL
+  
+    window.location.href = 
+      `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
+  };
 
     if (!auth.isAuthenticated) {
         return <LoginPage onLogin={() => auth.signinRedirect()} />;
