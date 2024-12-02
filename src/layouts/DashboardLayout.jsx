@@ -1,28 +1,23 @@
 // src/layouts/DashboardLayout.jsx
 import React from 'react';
 import { Box, Container } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from '../theme';
-import Header from '../Components/Header';
 import Sidebar from '../Components/Sidebar';
 
-const DashboardLayout = ({ children, userName, onSignOut, selectedPage, onPageSelect }) => {
+const DashboardLayout = ({ children, selectedPage, setSelectedPage }) => {
   return (
-    <ThemeProvider theme={theme}>
-      <Box display="flex">
+    <Box sx={{ display: 'flex' }}>
+      <Box sx={{ width: 240, flexShrink: 0 }}>
         <Sidebar 
-          onSelectPage={onPageSelect}
-          onSignOut={onSignOut}
-          selectedPage={selectedPage}
+          selectedPage={selectedPage} 
+          setSelectedPage={setSelectedPage}
         />
-        <Box ml="20vw" width="80vw">
-          <Header userName={userName} />
-          <Container sx={{ mt: "10vh" }}>
-            {children}
-          </Container>
-        </Box>
       </Box>
-    </ThemeProvider>
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Container maxWidth="lg">
+          {children}
+        </Container>
+      </Box>
+    </Box>
   );
 };
 

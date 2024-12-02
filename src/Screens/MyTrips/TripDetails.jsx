@@ -14,6 +14,7 @@ import StudentRoster from "./StudentRoster";
 import AdultRoster from "./AdultRoster"; 
 import Funding from "./Funding";
 import Documents from "../CreateTrip/Documents";
+import ClassPermissionTracker from '../../Components/ClassPermissionTracker';
 
 const TripDetails = ({ tripId, onBack }) => {
     const [tripData, setTripData] = useState(null);
@@ -77,7 +78,7 @@ const TripDetails = ({ tripId, onBack }) => {
         },
         {
             title: "Student Roster",
-            component: <StudentRoster data={tripData} />
+            component: <ClassPermissionTracker tripData={tripData} />
         },
         {
             title: "Adult Roster",

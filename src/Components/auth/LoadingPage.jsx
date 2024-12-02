@@ -3,9 +3,16 @@ import { Box, CircularProgress, Typography } from '@mui/material';
 
 const LoadingPage = () => {
   return (
-    <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" height="100vh">
+    <Box 
+      display="flex" 
+      flexDirection="column" 
+      alignItems="center" 
+      justifyContent="center" 
+      minHeight="100vh"
+      gap={2}
+    >
       <CircularProgress />
-      <Typography variant="h6" mt={2}>Loading...</Typography>
+      <Typography>Loading...</Typography>
     </Box>
   );
 };
