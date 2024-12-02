@@ -13,18 +13,29 @@
     },
     "categories": {
       "storage": {
-        "TripData": {}
+        "TripData": {},
+        "documents": {}
       },
       "function": {
         "processData": {
           "deploymentBucketName": "amplify-rollcall-dev-e788f-deployment",
-          "s3Key": "amplify-builds/processData-5578643557655749762b-build.zip",
+          "s3Key": "amplify-builds/processData-52336d71354675754738-build.zip",
           "storageTripdataName": "TripData-dev"
         },
-        "displayDataID": {}
+        "displayDataID": {
+          "deploymentBucketName": "amplify-rollcall-dev-e788f-deployment",
+          "s3Key": "amplify-builds/displayDataID-7974344e594431747271-build.zip"
+        },
+        "getFormData": {
+          "deploymentBucketName": "amplify-rollcall-dev-e788f-deployment",
+          "s3Key": "amplify-builds/getFormData-42376b4c7367565a7473-build.zip"
+        }
       },
       "api": {
         "sendFormData": {}
+      },
+      "auth": {
+        "rollcalleab85e39": {}
       }
     }
   },

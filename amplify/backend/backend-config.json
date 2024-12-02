@@ -38,7 +38,7 @@
     }
   },
   "auth": {
-    "rollcallc1f5e965": {
+    "rollcalleab85e39": {
       "customAuth": false,
       "dependsOn": [],
       "frontendAuthConfig": {
@@ -54,9 +54,7 @@
           "EMAIL"
         ],
         "socialProviders": [],
-        "usernameAttributes": [
-          "EMAIL"
-        ],
+        "usernameAttributes": [],
         "verificationMechanisms": [
           "EMAIL"
         ]
@@ -160,6 +158,11 @@
     "TripData": {
       "providerPlugin": "awscloudformation",
       "service": "DynamoDB"
+    },
+    "documents": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
     }
   }
 }
