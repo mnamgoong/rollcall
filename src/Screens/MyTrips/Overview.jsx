@@ -108,7 +108,7 @@ const Overview = () => {
                 <Typography variant="h5" fontWeight="bold" mt={4} mb={2}>My Trips</Typography>
                 <Divider />
                 <Grid container spacing={4} mt={2} mb={6}>
-                    {trips.map((trip) => {
+                    {[...trips].sort((a, b) => a.tripName.localeCompare(b.tripName)).map((trip) => {
                         const { bgcolor, textColor, pillColor } = getStatusColor(trip.status);
                         return (
                             <Grid item xs={12} sm={6} md={4} key={trip.id}>
