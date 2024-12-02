@@ -116,7 +116,7 @@ const EditTrip = ({ tripId, onBack }) => {
             setIsSaving(false);
         }
     };
-w    
+
 
     const sections = [
         {
