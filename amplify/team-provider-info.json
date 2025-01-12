@@ -20,6 +20,7 @@
         "processData": {
           "deploymentBucketName": "amplify-rollcall-dev-e788f-deployment",
           "s3Key": "amplify-builds/processData-52336d71354675754738-build.zip",
+          "s3Key": "amplify-builds/processData-52336d71354675754738-build.zip",
           "storageTripdataName": "TripData-dev"
         },
         "displayDataID": {
