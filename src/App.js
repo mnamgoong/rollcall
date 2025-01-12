@@ -1,52 +1,112 @@
-import React, { useState } from 'react';
-import { Box, Container } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from './theme';
-import './App.css';
-import Sidebar from './Components/Sidebar';
-import Header from './Components/Header';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from 'react-oidc-context';
+import DashboardLayout from './layouts/DashboardLayout';
+import LoginPage from './Components/auth/LoginPage';
+import LoadingPage from './Components/auth/LoadingPage';
+import ErrorPage from './Components/auth/ErrorPage';
 import Dashboard from './Screens/Dashboard';
 import CreateTrip from './Screens/CreateTrip/CreateTrip';
 import MyTrips from './Screens/MyTrips/Overview';
 import Help from './Screens/Help';
+import EditTrip from './Screens/EditTrips/EditTrip'; // Import EditTrip component
 
 function App() {
-	// state to store the active page
-	const [selectedPage, setSelectedPage] = useState("Dashboard");
+    const auth = useAuth();
+    const [selectedPage, setSelectedPage] = useState("Dashboard");
+    const [selectedTripId, setSelectedTripId] = useState(null);
+    const [trips, setTrips] = useState([]);
 
-	// function to handle page change
-	const renderPage = () => {
-		switch (selectedPage) {
-			case "Dashboard":
-				return <Dashboard />;
-			case "Create a Trip":
-				return <CreateTrip setSelectedPage={setSelectedPage}/>;
-			case "My Trips":
-				return <MyTrips />;
-			case "Help":
-				return <Help />;
-			default:
-				return <Dashboard />;
-		}
-	};
+    useEffect(() => {
+        const fetchTrips = async () => {
+            try {
+                const userEmail = auth.user?.profile.email;
+                const response = await fetch(
+                    `https://olt95t35ea.execute-api.us-east-1.amazonaws.com/dev/gettrips?email=${encodeURIComponent(userEmail)}`
+                );
 
-	return (
-		<ThemeProvider theme={theme}>
-			<Box display="flex">
-				{/* sidebar */}
-				<Sidebar onSelectPage={setSelectedPage} />
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
 
-				{/* main content */}
-				<Box
-					ml="20vw" // align content next to the sidebar
-					width="80vw" // content area takes up the remaining width
-				>
-					<Header />
-					<Container sx={{ mt: "10vh" }}>{renderPage()}</Container>
-				</Box>
-			</Box>
-		</ThemeProvider>
-	);
+                const data = await response.json();
+                setTrips(data.data || []);
+            } catch (error) {
+                console.error('Error fetching trips:', error);
+                setTrips([]);
+            }
+        };
+
+        if (auth.user) {
+            fetchTrips();
+        }
+    }, [auth.user]);
+
+    const renderContent = () => {
+        switch (selectedPage) {
+            case "Create a Trip":
+                return (
+                    <CreateTrip
+                        setSelectedPage={setSelectedPage}
+                        tripData={selectedTripId ? trips.find((trip) => trip.id === selectedTripId) : null}
+                        isEditing={Boolean(selectedTripId)}
+                    />
+                );
+            case "Edit Trip": // Add routing for EditTrip
+                return (
+                    <EditTrip
+                        tripId={selectedTripId}
+                        onBack={() => setSelectedPage("My Trips")} // Navigate back to My Trips
+                    />
+                );
+            case "My Trips":
+                return (
+                    <MyTrips
+                        setSelectedPage={setSelectedPage}
+                        setSelectedTripId={setSelectedTripId}
+                    />
+                );
+            case "Help":
+                return <Help />;
+            default:
+                return <Dashboard />;
+        }
+    };
+
+    if (auth.isLoading) {
+        return <LoadingPage />;
+    }
+
+
+    if (auth.error) {
+        return <ErrorPage error={auth.error} />;
+    }
+  const handleSignOut = async () => {
+    // First clear the local auth state
+    await auth.removeUser();
+    
+    // Then redirect to Cognito logout URL
+    const cognitoDomain = "https://us-east-1mpeeh4bud.auth.us-east-1.amazoncognito.com";
+    const clientId = "6ihgv04tth5if17o08l7liq1co";
+    const logoutUri = "https://rollcalltrips.com/"; // or your logout redirect URL
+  
+    window.location.href = 
+      `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
+  };
+
+    if (!auth.isAuthenticated) {
+        return <LoginPage onLogin={() => auth.signinRedirect()} />;
+    }
+
+    return (
+        <DashboardLayout
+            userName={auth.user?.profile.name}
+            onSignOut={handleSignOut}
+            selectedPage={selectedPage}
+            onPageSelect={setSelectedPage}
+        >
+            {renderContent()}
+        </DashboardLayout>
+    );
 }
 
 export default App;

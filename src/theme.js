@@ -2,7 +2,7 @@ import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
   typography: {
-    fontFamily: 'Poppins', 
+    fontFamily: '"Playwrite HR Lijeva", "Poppins", sans-serif',
     fontSize: 15, 
   },
   palette: {

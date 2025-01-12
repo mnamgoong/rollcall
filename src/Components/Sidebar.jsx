@@ -6,6 +6,7 @@ import Logout from "@mui/icons-material/Logout";
 import Luggage from "@mui/icons-material/Luggage";
 import { Box, Button, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import { get } from 'aws-amplify/api';
+import { useAuth } from 'react-oidc-context';
 
 // Navigation configuration
 const navigationItems = [
@@ -15,17 +16,23 @@ const navigationItems = [
     { id: 'Help', icon: HelpOutline }
 ];
 
-const Sidebar = ({onSelectPage}) => {
+const Sidebar = ({ onSelectPage, onSignOut }) => {  // Add onSignOut to props
     const [selectedItem, setSelectedItem] = useState('Dashboard');
+    const auth = useAuth();
 
-    // handler for My Trips API call
     const handleMyTripsClick = async () => {
         console.log('My Trips clicked');
         try {
+            const userEmail = auth.user?.profile.email;
             console.log('Making API call to gettrips');
             const response = await get({
                 apiName: 'sendFormData',
-                path: '/gettrips'
+                path: '/gettrips',
+                options: {
+                    queryParams: {
+                        email: userEmail
+                    }
+                }
             });
             console.log('API Response:', response);
         } catch (error) {
@@ -53,35 +60,35 @@ const Sidebar = ({onSelectPage}) => {
             bgcolor="white"
             display="flex"
             flexDirection="column"
-            position="fixed" 
+            position="fixed"
         >
             <Box display="flex" flexDirection="column" alignItems="center" p={2} flexGrow={1}>
                 {/* RollCall Logo and Title */}
                 <Box display="flex" alignItems="center" mb={4}>
                     <img
-                        src={require("../Images/logo64.png")}
+                        src={require("../Images/logo128.png")}
                         alt="Logo"
-                        style={{ width: 50, height: 50 }}
+                        style={{ width: 100, height: 100 }}
                     />
-                    <Typography variant="h4" sx={{ fontFamily: 'Short Stack' }} ml={2}>
+                    {/* <Typography variant="h4" sx={{ fontFamily: 'Short Stack' }} ml={2}>
                         RollCall
-                    </Typography>
+                    </Typography> */}
                 </Box>
 
                 {/* Navigation Menu */}
-                <List sx={{ width: '100%', px: 2 }}> 
+                <List sx={{ width: '100%', px: 2 }}>
                     {navigationItems.map(({ id, icon: Icon }) => (
-                        <ListItem 
+                        <ListItem
                             key={id}
-                            button 
+                            button
                             onClick={() => handleItemClick(id)}
                             sx={{
                                 bgcolor: selectedItem === id ? '#eee' : 'transparent',
                                 borderRadius: '8px',
-                                mb: 1, 
+                                mb: 1,
                                 '&:hover': {
-                                    bgcolor: selectedItem === id 
-                                        ? '#eee' 
+                                    bgcolor: selectedItem === id
+                                        ? '#eee'
                                         : 'rgba(0, 0, 0, 0.04)'
                                 }
                             }}
@@ -93,17 +100,12 @@ const Sidebar = ({onSelectPage}) => {
                 </List>
 
                 {/* Logout Button */}
-                <Box 
-                    position="fixed" 
-                    bottom={20} 
-                    display="flex" 
-                    justifyContent="center" 
-                    width="20vw"
-                >
+                <Box position="fixed" bottom={20} display="flex" justifyContent="center" width="20vw">
                     <Button
                         variant="contained"
                         color="error"
                         startIcon={<Logout />}
+                        onClick={onSignOut}  // Use the onSignOut prop
                     >
                         Log Out
                     </Button>

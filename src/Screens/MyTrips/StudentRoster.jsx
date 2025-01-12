@@ -15,44 +15,125 @@ import {
     Typography  
 } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
-import studentData from '../../data/students.json'; // dummy data
+import { useAuth } from 'react-oidc-context';
 
 const StudentRoster = ({ data }) => {
-    // get and sort students for the selected period
-    const getStudentsForPeriod = useCallback(() => {
-        const periodNumber = parseInt(data.classSelection?.split(' ')[1]);
-        return studentData.students
-            .filter(student => student.period === periodNumber)
-            .sort((a, b) => {
-                // first compare by lastName
-                const lastNameComparison = a.lastName.localeCompare(b.lastName);
-                
-                // if lastNames are equal, compare by firstName
-                if (lastNameComparison === 0) {
-                    return a.firstName.localeCompare(b.firstName);
-                }
-                
-                return lastNameComparison;
-            });
-    }, [data.classSelection]);
+    const [students, setStudents] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const auth = useAuth();
 
-    // initialize students state with sorted data
-    const [students, setStudents] = useState(getStudentsForPeriod());
+    const fetchStudents = async () => {
+        const userEmail = auth.user?.profile.email;
+        const periodNumber = data.classSelection.split(' ')[1];
+
+        try {
+            const url = `https://z6u30mgjq5.execute-api.us-east-1.amazonaws.com/dev/students?teacherEmail=${encodeURIComponent(userEmail)}&period=${encodeURIComponent(periodNumber)}&tripId=${encodeURIComponent(data.id)}`;
+            console.log('Request URL:', url);
+
+            const response = await fetch(url);
+            console.log('Response status:', response.status);
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Response error:', errorText);
+                throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+            }
+
+            const responseData = await response.json();
+            console.log('Response data:', responseData);
+
+            if (responseData && responseData.length > 0 && responseData[0].students) {
+                setStudents(responseData[0].students.map(student => ({
+                    ...student,
+                    slipSigned: student.slipSigned || false
+                })));
+            } else {
+                console.log('No students found in response');
+                setStudents([]);
+            }
+        } catch (error) {
+            console.error('Error details:', {
+                message: error.message,
+                stack: error.stack,
+                periodNumber,
+                auth: auth.user ? 'authenticated' : 'not authenticated'
+            });
+            setError('Failed to load student data');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // get and sort students for the selected period
+    // const getStudentsForPeriod = useCallback(() => {
+    //     const periodNumber = parseInt(data.classSelection?.split(' ')[1]);
+    //     return studentData.students
+    //         .filter(student => student.period === periodNumber)
+    //         .sort((a, b) => {
+    //             // first compare by lastName
+    //             const lastNameComparison = a.lastName.localeCompare(b.lastName);
+                
+    //             // if lastNames are equal, compare by firstName
+    //             if (lastNameComparison === 0) {
+    //                 return a.firstName.localeCompare(b.firstName);
+    //             }
+                
+    //             return lastNameComparison;
+    //         });
+    // }, [data.classSelection]);
+
+    // // initialize students state with sorted data
+    // const [students, setStudents] = useState(getStudentsForPeriod());
 
     // update students when class selection changes
     useEffect(() => {
-        setStudents(getStudentsForPeriod());
-    }, [getStudentsForPeriod]);
+        if (auth.user && data) {
+            fetchStudents();
+        }
+    }, [auth.user, data.id]);
 
     // permission slip and payment tracking
-    const handleCheckboxChange = (studentIndex, field) => (event) => {
-        const newStudents = [...students];
-        newStudents[studentIndex] = {
-            ...newStudents[studentIndex],
-            [field]: event.target.checked
-        };
-        console.log(`${field} changed for ${newStudents[studentIndex].firstName} ${newStudents[studentIndex].lastName}`);
-        setStudents(newStudents);
+    const handleCheckboxChange = async (studentId, currentStatus) => {
+        console.log(data.id)
+        console.log(studentId)
+        console.log(currentStatus)
+
+        try {
+            const response = await fetch(
+                'https://z6u30mgjq5.execute-api.us-east-1.amazonaws.com/dev/permission-status',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        student_id: studentId,
+                        trip_id: data.id,
+                        if_permission: (!currentStatus).toString()
+                    })
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const responseData = await response.json();
+            if (responseData) {
+                setStudents(prevStudents => 
+                    prevStudents.map(student => 
+                        student.id === studentId 
+                            ? { ...student, slipSigned: !currentStatus }
+                            : student
+                    )
+                );
+            }
+        } catch (error) {
+            console.error('Error updating permission:', error);
+            setError('Failed to update permission status');
+            await fetchStudents();
+        }
     };
 
     // helper function to render table headers
@@ -68,11 +149,24 @@ const StudentRoster = ({ data }) => {
 
     const [searchTerm, setSearchTerm] = useState('');
 
-    // filter students based on search
-    const filteredStudents = students.filter(student => {
-        const fullName = `${student.lastName} ${student.firstName}`.toLowerCase();
-        return fullName.includes(searchTerm.toLowerCase());
-    });
+    const filteredStudents = students
+        .filter(student => {
+            const fullName = `${student.name}`.toLowerCase();
+            return fullName.includes(searchTerm.toLowerCase());
+        })
+        .sort((a, b) => {
+            // First compare by lastName
+            const lastNameComparison = a.name.split(' ')[1]
+                .localeCompare(b.name.split(' ')[1]);
+            
+            // If lastNames are equal, compare by firstName
+            if (lastNameComparison === 0) {
+                return a.name.split(' ')[0]
+                    .localeCompare(b.name.split(' ')[0]);
+            }
+            
+            return lastNameComparison;
+        });
 
     return (
         <Box display="flex" justifyContent="center" width="100%">
@@ -144,25 +238,25 @@ const StudentRoster = ({ data }) => {
                                     ])}
                                 </TableHead>
                                 <TableBody>
-                                {(searchTerm.trim() === '' ? students : filteredStudents).map((student, index) => (
+                                    {filteredStudents.map((student, index) => (
                                         <TableRow key={index}>
                                             <TableCell>
-                                                {`${student.lastName}, ${student.firstName}`}
+                                                {student.name}
                                             </TableCell>
                                             <TableCell>
                                                 <Checkbox
-                                                    checked={student.permissionSlip}
-                                                    onChange={handleCheckboxChange(index, 'permissionSlip')}
+                                                    checked={student.slipSigned}
+                                                    onChange={() => handleCheckboxChange(student.id, student.slipSigned)}
                                                 />
                                             </TableCell>
                                             <TableCell>
                                                 <Checkbox
-                                                    checked={student.payment}
-                                                    onChange={handleCheckboxChange(index, 'payment')}
+                                                    // checked={student.payment}
+                                                    // onChange={handleCheckboxChange(index, 'payment')}
                                                 />
                                             </TableCell>
                                             <TableCell>
-                                                {student.healthConditions}
+                                                {/* {student.healthConditions} */}
                                             </TableCell>
                                         </TableRow>
                                     ))}

@@ -22,16 +22,12 @@ const Documents = ({ data }) => {
     const [previewOpen, setPreviewOpen] = useState(false);
 
     const handlePreviewClick = (file) => {
-        if (file) {
-            setPreviewFile({ 
-                name: file.name,
-                type: file.type,
-                url: file.url
-            });
-            setPreviewOpen(true);
-        } else {
-            console.error("File not found for preview");
-        }
+        setPreviewFile({ 
+            url: file.data,
+            type: file.type, 
+            name: file.name 
+        });
+        setPreviewOpen(true);
     };
 
     const handleClosePreview = () => {
@@ -73,7 +69,7 @@ const Documents = ({ data }) => {
                         <Typography variant="h6" fontWeight="bold" gutterBottom>
                             Uploaded Documents
                         </Typography>
-                    
+
                         {data?.uploadedFiles?.length > 0 ? (
                             <List sx={{ mt: 2, width: '100%', py: 0 }}>
                                 {data.uploadedFiles.map((file, index) => (
@@ -86,6 +82,7 @@ const Documents = ({ data }) => {
                                     >
                                         <ListItemText 
                                             primary={file.name}
+                                            secondary={`${(file.size / 1024).toFixed(2)} KB`}
                                             sx={{ my: 0 }}
                                         />
                                         <ListItemSecondaryAction>
