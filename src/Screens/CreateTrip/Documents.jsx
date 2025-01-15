@@ -65,6 +65,8 @@ const Documents = ({ data, updateData }) => {
         
         setFileNames(prevFileNames => [...prevFileNames, ...newFileNames]);
         setFilesToUpload(prevFiles => [...prevFiles, ...newFiles]);
+
+        event.target.value = '';
     };
 
     const handleDeleteFile = (indexToDelete) => {
