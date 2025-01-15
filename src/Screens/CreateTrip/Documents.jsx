@@ -75,7 +75,11 @@ const Documents = ({ data, updateData }) => {
     const handlePreviewClick = (file) => {
         if (file) {
             const fileUrl = URL.createObjectURL(file);
-            setPreviewFile({ url: fileUrl, type: file.type, name: file.name });
+            setPreviewFile({ 
+                url: fileUrl, 
+                type: file.type, 
+                name: file.name 
+            });
             setPreviewOpen(true);
         }
     };
@@ -118,7 +122,7 @@ const Documents = ({ data, updateData }) => {
         });
 
         try {
-            for (const file of filesToUpload) {
+            const uploadPromises = filesToUpload.map(async (file) => {
                 const params = {
                     Bucket: S3_BUCKET,
                     Key: file.name,
@@ -126,8 +130,16 @@ const Documents = ({ data, updateData }) => {
                     ContentType: file.type,
                 };
 
-                await s3.upload(params).promise();
-            }
+                const uploadResult = await s3.upload(params).promise();
+                return {
+                    name: file.name,
+                    type: file.type,
+                    url: uploadResult.Location // S3 URL of the uploaded file
+                };
+            });
+
+            const newUploadedFiles = await Promise.all(uploadPromises);
+            updateData({ uploadedFiles: [...data.uploadedFiles, ...newUploadedFiles] });
             
             setFilesToUpload([]);
             setSnackbarOpen(true);
