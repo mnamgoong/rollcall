@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import { 
     Box, 
@@ -24,6 +24,7 @@ import {
     Visibility as VisibilityIcon
 } from "@mui/icons-material";
 import AWS from 'aws-sdk';
+import { Amplify, Storage } from 'aws-amplify';
 
 const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -38,25 +39,25 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const Documents = ({ data, updateData }) => {
+    const S3_BUCKET = "rollcall-uploaded-documents";
+    const REGION = "us-east-1";
+    
+    // State variables
     const [previewFile, setPreviewFile] = useState(null);
     const [previewOpen, setPreviewOpen] = useState(false);
     const [fileNames, setFileNames] = useState([]);
     const [filesToUpload, setFilesToUpload] = useState([]);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-    // AWS S3 configuration
-    const S3_BUCKET = "rollcall-uploaded-documents";
-    const REGION = "us-east-1";
-
-    AWS.config.update({ 
-        accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
-    }); // hidden keys in the .env file (.gitignore)
-
-    const s3 = new AWS.S3({
-        params: { Bucket: S3_BUCKET },
-        region: REGION,
-    });
+    useEffect(() => {
+        // Configure AWS
+        AWS.config.update({
+            region: REGION,
+            credentials: new AWS.CognitoIdentityCredentials({
+                IdentityPoolId: 'us-east-1:f71ac820-df2b-4c61-834d-d448d9862479'
+            })
+        });
+    }, []);
 
     const handleFileChange = (event) => {
         const newFiles = Array.from(event.target.files);
@@ -66,71 +67,22 @@ const Documents = ({ data, updateData }) => {
         setFilesToUpload(prevFiles => [...prevFiles, ...newFiles]);
     };
 
-    // const uploadFiles = async () => {
-    //     const uploadPromises = filesToUpload.map(file => {
-    //         const params = {
-    //             Bucket: S3_BUCKET,
-    //             Key: file.name,
-    //             Body: file,
-    //             ContentType: file.type,
-    //         };
-
-    //         return s3.upload(params).promise(); 
-    //     });
-
-    //     try {
-    //         const uploadResults = await Promise.all(uploadPromises);
-
-    //         const newUploadedFiles = uploadResults.map((result, index) => ({
-    //             name: filesToUpload[index].name,
-    //             type: filesToUpload[index].type,
-    //             url: `https://${S3_BUCKET}.s3.${REGION}.amazonaws.com/${filesToUpload[index].name}` // Construct the URL
-    //         }));
-
-    //         updateData({ uploadedFiles: [...data.uploadedFiles, ...newUploadedFiles] });
-    //         setFilesToUpload([]); // Clear files to upload
-    //         setSnackbarOpen(true); // Show success message
-    //     } catch (error) {
-    //         console.error("Error uploading files: ", error);
-    //     }
-    // };
-    const uploadFiles = async () => {
-        // Simplified to just store file information
-        const newUploadedFiles = filesToUpload.map(file => ({
-            name: file.name,
-            type: file.type,
-        }));
-
-        updateData({ uploadedFiles: [...data.uploadedFiles, ...newUploadedFiles] });
-        setFilesToUpload([]); // Clear files to upload
-        setSnackbarOpen(true); // Show success message
-    };
-
     const handleDeleteFile = (indexToDelete) => {
-        const updatedFileNames = fileNames.filter((_, index) => index !== indexToDelete);
-        const updatedFilesToUpload = filesToUpload.filter((_, index) => index !== indexToDelete);
-
-        setFileNames(updatedFileNames);
-        setFilesToUpload(updatedFilesToUpload);
+        setFileNames(prev => prev.filter((_, index) => index !== indexToDelete));
+        setFilesToUpload(prev => prev.filter((_, index) => index !== indexToDelete));
     };
 
     const handlePreviewClick = (file) => {
         if (file) {
-            const fileUrl = URL.createObjectURL(file); // Create a URL for the file
-            setPreviewFile({ 
-                url: fileUrl, // Use the created URL
-                type: file.type, 
-                name: file.name 
-            });
+            const fileUrl = URL.createObjectURL(file);
+            setPreviewFile({ url: fileUrl, type: file.type, name: file.name });
             setPreviewOpen(true);
-        } else {
-            console.error("File not found for preview");
         }
     };
 
     const handleClosePreview = () => {
         if (previewFile?.url) {
-            URL.revokeObjectURL(previewFile.url); // Clean up the object URL
+            URL.revokeObjectURL(previewFile.url);
         }
         setPreviewFile(null);
         setPreviewOpen(false);
@@ -159,8 +111,30 @@ const Documents = ({ data, updateData }) => {
         return <Typography>Preview not available for this file type</Typography>;
     };
 
-    const handleSnackbarClose = () => {
-        setSnackbarOpen(false);
+    const uploadFiles = async () => {
+        const s3 = new AWS.S3({
+            params: { Bucket: S3_BUCKET },
+            region: REGION,
+        });
+
+        try {
+            for (const file of filesToUpload) {
+                const params = {
+                    Bucket: S3_BUCKET,
+                    Key: file.name,
+                    Body: file,
+                    ContentType: file.type,
+                };
+
+                await s3.upload(params).promise();
+            }
+            
+            setFilesToUpload([]);
+            setSnackbarOpen(true);
+            console.log('Upload successful');
+        } catch (error) {
+            console.error('Upload error:', error);
+        }
     };
 
     return (
@@ -206,7 +180,7 @@ const Documents = ({ data, updateData }) => {
                                             <IconButton 
                                                 edge="end" 
                                                 aria-label="preview"
-                                                onClick={() => handlePreviewClick(filesToUpload[index])} // Pass the correct file object
+                                                onClick={() => handlePreviewClick(filesToUpload[index])}
                                                 size="small"
                                             >
                                                 <VisibilityIcon />
@@ -232,6 +206,7 @@ const Documents = ({ data, updateData }) => {
                         variant="contained"
                         color="primary"
                         onClick={uploadFiles}
+                        disabled={filesToUpload.length === 0}
                     >
                         Save Files
                     </Button>
@@ -255,8 +230,8 @@ const Documents = ({ data, updateData }) => {
             <Snackbar
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                 open={snackbarOpen}
-                autoHideDuration={1000}
-                onClose={handleSnackbarClose}
+                autoHideDuration={3000}
+                onClose={() => setSnackbarOpen(false)}
             >
                 <SnackbarContent
                     message={
