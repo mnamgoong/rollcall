@@ -89,6 +89,10 @@ const Overview = ({ setSelectedPage, setSelectedTripId }) => {
         setCurrentTripId(tripId);
     };
 
+    const handleSendMessage = (tripId) => {
+        // add sending emaii code here 
+    }
+
     const handleBackToOverview = () => {
         setCurrentTripId(null); 
     };
@@ -163,6 +167,14 @@ const Overview = ({ setSelectedPage, setSelectedTripId }) => {
                                         onClick={() => handleEditTrip(trip.id)}
                                     >
                                         Edit
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        fullWidth
+                                        sx={{ mt: 2, bgcolor: "#007FFF" }}
+                                        onClick={() => handleSendMessage(trip.id)}
+                                    >
+                                        Send Message
                                     </Button>
                                 </Paper>
                             </Grid>
