@@ -168,14 +168,16 @@ const Overview = ({ setSelectedPage, setSelectedTripId }) => {
                                     >
                                         Edit
                                     </Button>
-                                    <Button
-                                        variant="contained"
-                                        fullWidth
-                                        sx={{ mt: 2, bgcolor: "#007FFF" }}
-                                        onClick={() => handleSendMessage(trip.id)}
-                                    >
-                                        Send Message
-                                    </Button>
+                                    {trip.status === "APPROVED" && (
+                                        <Button
+                                            variant="contained"
+                                            fullWidth
+                                            sx={{ mt: 2, bgcolor: "#007FFF" }}
+                                            onClick={() => handleSendMessage(trip.id)}
+                                        >
+                                            Send Message
+                                        </Button>
+                                    )}
                                 </Paper>
                             </Grid>
                         );
