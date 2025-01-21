@@ -89,9 +89,28 @@ const Overview = ({ setSelectedPage, setSelectedTripId }) => {
         setCurrentTripId(tripId);
     };
 
-    const handleSendMessage = (tripId) => {
-        // add sending emaii code here 
-    }
+    const handleSendMessage = async (tripId) => {
+        console.log(`Send Message button clicked for trip ID: ${tripId}`);
+    
+        try {
+            const response = await fetch('https://nt0yfs8baf.execute-api.us-east-1.amazonaws.com/default/sendEmail', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tripId }),
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Failed to send email. Status: ${response.status}`);
+            }
+    
+            const data = await response.json();
+            console.log('Email sent successfully:', data);
+        } catch (error) {
+            console.error('Error sending email:', error);
+            alert('Failed to send emails. Please try again.');
+        }
+    };
+    
 
     const handleBackToOverview = () => {
         setCurrentTripId(null); 
