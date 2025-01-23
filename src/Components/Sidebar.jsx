@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Dashboard from "@mui/icons-material/Dashboard";
 import HelpOutline from "@mui/icons-material/HelpOutline";
 import LocationOn from "@mui/icons-material/LocationOn";
 import Logout from "@mui/icons-material/Logout";
 import Luggage from "@mui/icons-material/Luggage";
-import { Box, Button, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
+import { Box, Button, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import { get } from 'aws-amplify/api';
-import { useAuth } from 'react-oidc-context';
+import { fetchUserAttributes } from 'aws-amplify/auth';
 
 // Navigation configuration
 const navigationItems = [
@@ -16,14 +16,33 @@ const navigationItems = [
     { id: 'Help', icon: HelpOutline }
 ];
 
-const Sidebar = ({ onSelectPage, onSignOut }) => {  // Add onSignOut to props
+const Sidebar = ({ onSelectPage, onSignOut }) => {
     const [selectedItem, setSelectedItem] = useState('Dashboard');
-    const auth = useAuth();
+    const [userEmail, setUserEmail] = useState(null); // State to store the user's email
+
+    // Fetch user email on mount
+    useEffect(() => {
+        const fetchEmail = async () => {
+            try {
+                const attributes = await fetchUserAttributes();
+                console.log("User Attributes:", attributes);
+                setUserEmail(attributes?.email); // Extract email and save it
+            } catch (error) {
+                console.error("Error fetching user attributes:", error);
+            }
+        };
+
+        fetchEmail();
+    }, []);
 
     const handleMyTripsClick = async () => {
         console.log('My Trips clicked');
         try {
-            const userEmail = auth.user?.profile.email;
+            if (!userEmail) {
+                console.error("User email not available.");
+                return;
+            }
+
             console.log('Making API call to gettrips');
             const response = await get({
                 apiName: 'sendFormData',
@@ -44,7 +63,7 @@ const Sidebar = ({ onSelectPage, onSignOut }) => {  // Add onSignOut to props
         }
     };
 
-    // handler for all navigation items
+    // Handler for navigation items
     const handleItemClick = (itemId) => {
         setSelectedItem(itemId);
         if (itemId === 'My Trips') {
@@ -63,16 +82,13 @@ const Sidebar = ({ onSelectPage, onSignOut }) => {  // Add onSignOut to props
             position="fixed"
         >
             <Box display="flex" flexDirection="column" alignItems="center" p={2} flexGrow={1}>
-                {/* RollCall Logo and Title */}
+                {/* Logo and Title */}
                 <Box display="flex" alignItems="center" mb={4}>
                     <img
                         src={require("../Images/logo128.png")}
                         alt="Logo"
                         style={{ width: 100, height: 100 }}
                     />
-                    {/* <Typography variant="h4" sx={{ fontFamily: 'Short Stack' }} ml={2}>
-                        RollCall
-                    </Typography> */}
                 </Box>
 
                 {/* Navigation Menu */}
@@ -105,7 +121,7 @@ const Sidebar = ({ onSelectPage, onSignOut }) => {  // Add onSignOut to props
                         variant="contained"
                         color="error"
                         startIcon={<Logout />}
-                        onClick={onSignOut}  // Use the onSignOut prop
+                        onClick={onSignOut}
                     >
                         Log Out
                     </Button>

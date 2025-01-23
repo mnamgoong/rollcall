@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { 
-	Box,
+    Box,
     Grid,
     TextField,
     Checkbox,
@@ -14,17 +14,29 @@ import {
     TableRow,
     Paper, 
 } from "@mui/material";
-import { useAuth } from 'react-oidc-context';
+import { fetchUserAttributes } from '@aws-amplify/auth'; // Import from correct package
 import studentData from '../../data/students.json'; // dummy data
 
 const Transportation = ({ data }) => {
     const [totalStudents, setTotalStudents] = useState(0);
-    const auth = useAuth();
+    const [userEmail, setUserEmail] = useState(null);
+
+    useEffect(() => {
+        const fetchEmail = async () => {
+            try {
+                const attributes = await fetchUserAttributes();
+                setUserEmail(attributes.email);
+            } catch (error) {
+                console.error("Error fetching user attributes:", error);
+            }
+        };
+
+        fetchEmail();
+    }, []);
 
     useEffect(() => {
         const fetchStudents = async () => {
-            if (auth.user && data.classSelection && data.id) {
-                const userEmail = auth.user?.profile.email;
+            if (userEmail && data.classSelection && data.id) {
                 const periodNumber = data.classSelection.split(' ')[1];
                 
                 try {
@@ -47,7 +59,7 @@ const Transportation = ({ data }) => {
         };
 
         fetchStudents();
-    }, [auth.user, data.classSelection, data.id]);
+    }, [userEmail, data.classSelection, data.id]);
 
     const totalAdults = (data.staff?.length || 0) + (data.chaperones?.length || 0);
     const totalPeople = totalStudents + totalAdults;
@@ -176,7 +188,13 @@ const Transportation = ({ data }) => {
                             disabled
                             control={<Checkbox checked={Boolean(data.other)} name="other" />} 
                             label="Other:" />
-                        <TextField variant="outlined" size="small" value={data.other} name="other" />
+                        <TextField 
+                            disabled
+                            variant="outlined" 
+                            size="small" 
+                            value={data.other} 
+                            name="other" 
+                        />
                     </Grid>
                 </Grid>
 

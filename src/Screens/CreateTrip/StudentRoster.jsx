@@ -1,23 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { 
-	Box, 
-	FormControl, 
-	Grid, 
-	MenuItem, 
-	Select, 
-	Typography 
+    Box, 
+    FormControl, 
+    Grid, 
+    MenuItem, 
+    Select, 
+    Typography 
 } from "@mui/material";
-import { useAuth } from 'react-oidc-context';
+import { fetchUserAttributes } from "@aws-amplify/auth"; // Import from the correct package
 
 const StudentRoster = ({ data, updateData }) => {
-    const [classPeriods, setClassPeriods] = React.useState([]);
-    const auth = useAuth();
+    const [classPeriods, setClassPeriods] = useState([]);
+    const [userEmail, setUserEmail] = useState(null); // State to store user email
 
-    React.useEffect(() => {
+    // Fetch user email on mount
+    useEffect(() => {
+        const fetchEmail = async () => {
+            try {
+                const attributes = await fetchUserAttributes();
+                setUserEmail(attributes?.email); // Extract and store the email
+            } catch (error) {
+                console.error("Error fetching user attributes:", error);
+            }
+        };
+
+        fetchEmail();
+    }, []);
+
+    useEffect(() => {
         const fetchClassInfo = async () => {
             try {
                 const response = await fetch(
-                    `https://u6x8gbfgze.execute-api.us-east-1.amazonaws.com/dev/info?teacherEmail=${auth.user?.profile.email}`,
+                    `https://u6x8gbfgze.execute-api.us-east-1.amazonaws.com/dev/info?teacherEmail=${userEmail}`,
                 );
                 const responseData = await response.json();
                 const periods = responseData.periods || [];
@@ -28,8 +42,10 @@ const StudentRoster = ({ data, updateData }) => {
             }
         };
 
-        fetchClassInfo();
-    }, [auth.user?.profile.email]);
+        if (userEmail) { // Only fetch if userEmail is available
+          fetchClassInfo();
+        }
+    }, [userEmail]); // Dependency array includes userEmail
 
     const handleChange = (event) => {
         updateData({ classSelection: event.target.value });

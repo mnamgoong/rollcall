@@ -1,25 +1,44 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from 'react-oidc-context';
+import { withAuthenticator } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
 import DashboardLayout from './layouts/DashboardLayout';
-import LoginPage from './Components/auth/LoginPage';
-import LoadingPage from './Components/auth/LoadingPage';
-import ErrorPage from './Components/auth/ErrorPage';
 import Dashboard from './Screens/Dashboard';
 import CreateTrip from './Screens/CreateTrip/CreateTrip';
 import MyTrips from './Screens/MyTrips/Overview';
 import Help from './Screens/Help';
 import EditTrip from './Screens/EditTrips/EditTrip'; // Import EditTrip component
+import { fetchUserAttributes } from 'aws-amplify/auth';
 
-function App() {
-    const auth = useAuth();
+function App({ signOut, user }) {
     const [selectedPage, setSelectedPage] = useState("Dashboard");
     const [selectedTripId, setSelectedTripId] = useState(null);
     const [trips, setTrips] = useState([]);
+    const [userAttributes, setUserAttributes] = useState(null); // State to store user attributes
+
+    // Fetch user attributes on component mount or when the user object changes
+    useEffect(() => {
+        const handleFetchUserAttributes = async () => {
+            try {
+                const attributes = await fetchUserAttributes();
+                setUserAttributes(attributes); // Store the attributes in state
+                console.log("User Attributes:", attributes); // Debug log
+            } catch (error) {
+                console.error("Error fetching user attributes:", error);
+            }
+        };
+
+        handleFetchUserAttributes();
+    }, [user]);
 
     useEffect(() => {
         const fetchTrips = async () => {
             try {
-                const userEmail = auth.user?.profile.email;
+                const userEmail = userAttributes?.email; // Use the fetched email from userAttributes
+                if (!userEmail) {
+                    console.error("User email not available.");
+                    return;
+                }
+
                 const response = await fetch(
                     `https://olt95t35ea.execute-api.us-east-1.amazonaws.com/dev/gettrips?email=${encodeURIComponent(userEmail)}`
                 );
@@ -36,10 +55,10 @@ function App() {
             }
         };
 
-        if (auth.user) {
+        if (userAttributes) {
             fetchTrips();
         }
-    }, [auth.user]);
+    }, [userAttributes]);
 
     const renderContent = () => {
         switch (selectedPage) {
@@ -72,35 +91,10 @@ function App() {
         }
     };
 
-    if (auth.isLoading) {
-        return <LoadingPage />;
-    }
-
-
-    if (auth.error) {
-        return <ErrorPage error={auth.error} />;
-    }
-  const handleSignOut = async () => {
-    // First clear the local auth state
-    await auth.removeUser();
-    
-    // Then redirect to Cognito logout URL
-    const cognitoDomain = "https://us-east-1mpeeh4bud.auth.us-east-1.amazoncognito.com";
-    const clientId = "6ihgv04tth5if17o08l7liq1co";
-    const logoutUri = "https://rollcalltrips.com/"; // or your logout redirect URL
-  
-    window.location.href = 
-      `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
-  };
-
-    if (!auth.isAuthenticated) {
-        return <LoginPage onLogin={() => auth.signinRedirect()} />;
-    }
-
     return (
         <DashboardLayout
-            userName={auth.user?.profile.name}
-            onSignOut={handleSignOut}
+            userName={userAttributes?.name || "Loading..."} // Display name from userAttributes
+            onSignOut={signOut}
             selectedPage={selectedPage}
             onPageSelect={setSelectedPage}
         >
@@ -109,4 +103,4 @@ function App() {
     );
 }
 
-export default App;
+export default withAuthenticator(App);
