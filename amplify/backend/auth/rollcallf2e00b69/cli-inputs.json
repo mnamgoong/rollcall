@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "rollcalleab85e39_identitypool_eab85e39",
+    "identityPoolName": "rollcallf2e00b69_identitypool_f2e00b69",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "rollcaeab85e39",
-    "userPoolName": "rollcalleab85e39_userpool_eab85e39",
+    "resourceNameTruncated": "rollcaf2e00b69",
+    "userPoolName": "rollcallf2e00b69_userpool_f2e00b69",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -20,7 +20,8 @@
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
     "requiredAttributes": [
-      "email"
+      "email",
+      "name"
     ],
     "aliasAttributes": [],
     "userpoolClientGenerateSecret": false,
@@ -31,12 +32,23 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "rollcaeab85e39_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "rollcaf2e00b69_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "eab85e39",
-    "resourceName": "rollcalleab85e39",
+    "sharedId": "f2e00b69",
+    "resourceName": "rollcallf2e00b69",
     "authSelections": "identityPoolAndUserPool",
-    "useDefault": "default",
+    "useDefault": "defaultSocial",
+    "hostedUI": true,
+    "usernameAttributes": [
+      "email"
+    ],
+    "triggers": {},
+    "hostedUIDomainName": "rollcallf2e00b69-f2e00b69",
+    "authProvidersUserPool": [
+      "Google"
+    ],
+    "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"name\":\"name\",\"username\":\"sub\"}}]",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/\"],\"LogoutURLs\":[\"http://localhost:3000/\"]}",
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,

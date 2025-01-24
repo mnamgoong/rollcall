@@ -1,19 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
     Box,
     Button, 
     Typography
 } from '@mui/material';
 import { get } from 'aws-amplify/api';
-import { useAuth } from 'react-oidc-context';
+import { fetchUserAttributes } from "@aws-amplify/auth";
 
 const Success = ({ onViewTrips, onCreateAnother, fetchTrips }) => {
-    const auth = useAuth();
+    const [userEmail, setUserEmail] = useState(null);
+
+    useEffect(() => {
+        const fetchEmail = async () => {
+            try {
+                const attributes = await fetchUserAttributes();
+                setUserEmail(attributes.email); 
+            } catch (error) {
+                console.error("Error fetching user attributes:", error);
+            }
+        };
+
+        fetchEmail();
+    }, []);
+
+
     const handleViewTrips = async () => {
         onViewTrips();
         console.log('My Trips clicked');
         try {
-            const userEmail = auth.user?.profile.email;
+            console.log(userEmail);
             console.log('Making API call to gettrips');
             const response = await get({
                 apiName: 'sendFormData',

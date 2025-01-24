@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { 
-	Box, 
+    Box, 
     Checkbox,
     FormControl, 
     Grid, 
@@ -12,19 +12,31 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Typography  
+    Typography  
 } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
-import { useAuth } from 'react-oidc-context';
+import { fetchUserAttributes } from "@aws-amplify/auth"; // Import from correct package
 
 const StudentRoster = ({ data }) => {
     const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const auth = useAuth();
+    const [userEmail, setUserEmail] = useState(null); // State to store user email
+
+    useEffect(() => {
+        const fetchEmail = async () => {
+            try {
+                const attributes = await fetchUserAttributes();
+                setUserEmail(attributes.email); // Extract and store the email
+            } catch (error) {
+                console.error("Error fetching user attributes:", error);
+            }
+        };
+
+        fetchEmail();
+    }, []);
 
     const fetchStudents = async () => {
-        const userEmail = auth.user?.profile.email;
         const periodNumber = data.classSelection.split(' ')[1];
 
         try {
@@ -57,7 +69,7 @@ const StudentRoster = ({ data }) => {
                 message: error.message,
                 stack: error.stack,
                 periodNumber,
-                auth: auth.user ? 'authenticated' : 'not authenticated'
+                auth: userEmail ? 'authenticated' : 'not authenticated'
             });
             setError('Failed to load student data');
         } finally {
@@ -65,33 +77,12 @@ const StudentRoster = ({ data }) => {
         }
     };
 
-    // get and sort students for the selected period
-    // const getStudentsForPeriod = useCallback(() => {
-    //     const periodNumber = parseInt(data.classSelection?.split(' ')[1]);
-    //     return studentData.students
-    //         .filter(student => student.period === periodNumber)
-    //         .sort((a, b) => {
-    //             // first compare by lastName
-    //             const lastNameComparison = a.lastName.localeCompare(b.lastName);
-                
-    //             // if lastNames are equal, compare by firstName
-    //             if (lastNameComparison === 0) {
-    //                 return a.firstName.localeCompare(b.firstName);
-    //             }
-                
-    //             return lastNameComparison;
-    //         });
-    // }, [data.classSelection]);
-
-    // // initialize students state with sorted data
-    // const [students, setStudents] = useState(getStudentsForPeriod());
-
     // update students when class selection changes
     useEffect(() => {
-        if (auth.user && data) {
+        if (userEmail && data) {
             fetchStudents();
         }
-    }, [auth.user, data.id]);
+    }, [userEmail, data.id]);
 
     // permission slip and payment tracking
     const handleCheckboxChange = async (studentId, currentStatus) => {

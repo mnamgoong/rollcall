@@ -1,112 +1,150 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from 'react-oidc-context';
+import { 
+  Authenticator, 
+  useAuthenticator, 
+  useTheme,
+  View,
+  Text,
+  Heading,
+  Button,
+  Image
+} from '@aws-amplify/ui-react';
+import { fetchUserAttributes } from 'aws-amplify/auth';
+import '@aws-amplify/ui-react/styles.css';
+
 import DashboardLayout from './layouts/DashboardLayout';
-import LoginPage from './Components/auth/LoginPage';
-import LoadingPage from './Components/auth/LoadingPage';
-import ErrorPage from './Components/auth/ErrorPage';
 import Dashboard from './Screens/Dashboard';
 import CreateTrip from './Screens/CreateTrip/CreateTrip';
 import MyTrips from './Screens/MyTrips/Overview';
 import Help from './Screens/Help';
-import EditTrip from './Screens/EditTrips/EditTrip'; // Import EditTrip component
+import EditTrip from './Screens/EditTrips/EditTrip';
+import logo from './Images/logo32.png';
+
+// Customization components and form fields
+const components = {
+  Header() {
+    const { tokens } = useTheme();
+    return (
+      <View textAlign="center" padding={tokens.space.large}>
+        <Image
+          alt="RollCall logo"
+          src = {logo}
+        />
+      </View>
+    );
+  },
+  Footer() {
+    const { tokens } = useTheme();
+    return (
+      <View textAlign="center" padding={tokens.space.large}>
+        <Text color={tokens.colors.neutral[80]}>
+          RollCall&copy; All Rights Reserved
+        </Text>
+      </View>
+    );
+  },
+ 
+};
+
 
 function App() {
-    const auth = useAuth();
-    const [selectedPage, setSelectedPage] = useState("Dashboard");
-    const [selectedTripId, setSelectedTripId] = useState(null);
-    const [trips, setTrips] = useState([]);
+  const [selectedPage, setSelectedPage] = useState("Dashboard");
+  const [selectedTripId, setSelectedTripId] = useState(null);
+  const [trips, setTrips] = useState([]);
+  const [userAttributes, setUserAttributes] = useState(null);
 
-    useEffect(() => {
-        const fetchTrips = async () => {
-            try {
-                const userEmail = auth.user?.profile.email;
-                const response = await fetch(
-                    `https://olt95t35ea.execute-api.us-east-1.amazonaws.com/dev/gettrips?email=${encodeURIComponent(userEmail)}`
-                );
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                setTrips(data.data || []);
-            } catch (error) {
-                console.error('Error fetching trips:', error);
-                setTrips([]);
-            }
-        };
-
-        if (auth.user) {
-            fetchTrips();
-        }
-    }, [auth.user]);
-
-    const renderContent = () => {
-        switch (selectedPage) {
-            case "Create a Trip":
-                return (
-                    <CreateTrip
-                        setSelectedPage={setSelectedPage}
-                        tripData={selectedTripId ? trips.find((trip) => trip.id === selectedTripId) : null}
-                        isEditing={Boolean(selectedTripId)}
-                    />
-                );
-            case "Edit Trip": // Add routing for EditTrip
-                return (
-                    <EditTrip
-                        tripId={selectedTripId}
-                        onBack={() => setSelectedPage("My Trips")} // Navigate back to My Trips
-                    />
-                );
-            case "My Trips":
-                return (
-                    <MyTrips
-                        setSelectedPage={setSelectedPage}
-                        setSelectedTripId={setSelectedTripId}
-                    />
-                );
-            case "Help":
-                return <Help />;
-            default:
-                return <Dashboard />;
-        }
+  // Fetch user attributes on component mount
+  useEffect(() => {
+    const handleFetchUserAttributes = async () => {
+      try {
+        const attributes = await fetchUserAttributes();
+        setUserAttributes(attributes);
+        console.log("User Attributes:", attributes);
+      } catch (error) {
+        console.error("Error fetching user attributes:", error);
+      }
     };
 
-    if (auth.isLoading) {
-        return <LoadingPage />;
-    }
+    handleFetchUserAttributes();
+  }, []);
 
+  useEffect(() => {
+    const fetchTrips = async () => {
+      try {
+        const userEmail = userAttributes?.email;
+        if (!userEmail) {
+          console.error("User email not available.");
+          return;
+        }
 
-    if (auth.error) {
-        return <ErrorPage error={auth.error} />;
+        const response = await fetch(
+          `https://olt95t35ea.execute-api.us-east-1.amazonaws.com/dev/gettrips?email=${encodeURIComponent(userEmail)}`
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setTrips(data.data || []);
+      } catch (error) {
+        console.error('Error fetching trips:', error);
+        setTrips([]);
+      }
+    };
+
+    if (userAttributes) {
+      fetchTrips();
     }
-  const handleSignOut = async () => {
-    // First clear the local auth state
-    await auth.removeUser();
-    
-    // Then redirect to Cognito logout URL
-    const cognitoDomain = "https://us-east-1mpeeh4bud.auth.us-east-1.amazoncognito.com";
-    const clientId = "6ihgv04tth5if17o08l7liq1co";
-    const logoutUri = "https://rollcalltrips.com/"; // or your logout redirect URL
-  
-    window.location.href = 
-      `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
+  }, [userAttributes]);
+
+  const renderContent = () => {
+    switch (selectedPage) {
+      case "Create a Trip":
+        return (
+          <CreateTrip
+            setSelectedPage={setSelectedPage}
+            tripData={selectedTripId ? trips.find((trip) => trip.id === selectedTripId) : null}
+            isEditing={Boolean(selectedTripId)}
+          />
+        );
+      case "Edit Trip":
+        return (
+          <EditTrip
+            tripId={selectedTripId}
+            onBack={() => setSelectedPage("My Trips")}
+          />
+        );
+      case "My Trips":
+        return (
+          <MyTrips
+            setSelectedPage={setSelectedPage}
+            setSelectedTripId={setSelectedTripId}
+          />
+        );
+      case "Help":
+        return <Help />;
+      default:
+        return <Dashboard />;
+    }
   };
 
-    if (!auth.isAuthenticated) {
-        return <LoginPage onLogin={() => auth.signinRedirect()} />;
-    }
-
-    return (
+  return (
+    <Authenticator 
+      components={components}
+    >
+      {({ signOut, user }) => (
         <DashboardLayout
-            userName={auth.user?.profile.name}
-            onSignOut={handleSignOut}
-            selectedPage={selectedPage}
-            onPageSelect={setSelectedPage}
+          userName={userAttributes?.name || "Loading..."}
+          onSignOut={signOut}
+          selectedPage={selectedPage}
+          onPageSelect={setSelectedPage}
         >
-            {renderContent()}
+          {renderContent()}
         </DashboardLayout>
-    );
+      )}
+    </Authenticator>
+  );
 }
 
 export default App;

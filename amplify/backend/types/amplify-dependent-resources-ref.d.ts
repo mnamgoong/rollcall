@@ -12,11 +12,13 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "auth": {
-    "rollcalleab85e39": {
+    "rollcallf2e00b69": {
       "AppClientID": "string",
       "AppClientIDWeb": "string",
+      "HostedUIDomain": "string",
       "IdentityPoolId": "string",
       "IdentityPoolName": "string",
+      "OAuthMetadata": "string",
       "UserPoolArn": "string",
       "UserPoolId": "string",
       "UserPoolName": "string"

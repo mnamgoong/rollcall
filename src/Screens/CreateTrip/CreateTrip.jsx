@@ -1,13 +1,12 @@
-import React, { useState, useCallback } from 'react';
-import { 
-    Box, 
-    Container, 
-    Typography, 
-    Button 
+import React, { useState, useCallback, useEffect } from 'react';
+import {
+    Box,
+    Container,
+    Typography,
+    Button
 } from '@mui/material';
 import { post } from 'aws-amplify/api';
 import ProgressTracker from './ProgressTracker';
-import { useAuth } from 'react-oidc-context';
 import BasicInformation from './BasicInformation';
 import Transportation from './Transportation';
 import StudentRoster from './StudentRoster';
@@ -15,6 +14,7 @@ import AdultRoster from './AdultRoster';
 import Funding from './Funding';
 import Documents from './Documents';
 import Success from './Success';
+import { fetchUserAttributes } from "@aws-amplify/auth";
 
 const initialFormState = {
     basicInformation: {
@@ -62,7 +62,6 @@ const initialFormState = {
 };
 
 const CreateTrip = ({ setSelectedPage }) => {
-    const auth = useAuth();
     const [activeTab, setActiveTab] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [completedSteps, setCompletedSteps] = useState({
@@ -76,6 +75,22 @@ const CreateTrip = ({ setSelectedPage }) => {
 
     // centralized state for all form data
     const [formData, setFormData] = useState(initialFormState);
+    const [userEmail, setUserEmail] = useState(null); // State to store user email
+    const [userName, setUserName] = useState(null); // State to store user name
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const attributes = await fetchUserAttributes();
+                setUserEmail(attributes?.email); // Extract and store the email
+                setUserName(attributes?.name); // Extract and store the name
+            } catch (error) {
+                console.error("Error fetching user attributes:", error);
+            }
+        };
+
+        fetchProfile();
+    }, []);
 
     // tab configuration
     const sections = [
@@ -142,7 +157,7 @@ const CreateTrip = ({ setSelectedPage }) => {
         {
             title: "Submission Complete",
             component: (
-                <Success 
+                <Success
                     onViewTrips={() => setSelectedPage("My Trips")}
                     onCreateAnother={() => {
                         setActiveTab(0);
@@ -164,7 +179,7 @@ const CreateTrip = ({ setSelectedPage }) => {
     // navigation functions
     const handleNext = () => {
         if (activeTab === sections.length - 2) { // If on Documents page
-            handleSubmit();
+            submitTripData(); // Call the renamed function
         } else {
             setActiveTab(prev => prev + 1);
         }
@@ -176,14 +191,10 @@ const CreateTrip = ({ setSelectedPage }) => {
         }
     };
 
-    const handleSubmit = async () => {
+    const submitTripData = async () => { // Renamed handleSubmit to submitTripData
         setIsSubmitting(true);
         try {
-            const userEmail = auth.user?.profile.email;
-            const userName = auth.user?.profile.name;
-
             console.log('=== USER DEBUG INFO ===');
-            console.log('Profile:', auth.user?.profile);
             console.log('Name:', userName);
             console.log('Email:', userEmail);
             console.log('=== END USER DEBUG INFO ===');
@@ -267,7 +278,7 @@ const CreateTrip = ({ setSelectedPage }) => {
                     {sections[activeTab].title}
                 </Typography>
 
-                <ProgressTracker 
+                <ProgressTracker
                     steps={sections.slice(0, -1).map(section => section.title)}
                     activeStep={activeTab}
                     completedSteps={completedSteps}

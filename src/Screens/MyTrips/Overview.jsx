@@ -15,7 +15,7 @@ import {
 } from "@mui/material"; 
 import TripDetails from "./TripDetails";
 import EditTrip from "../EditTrips/EditTrip";
-import { useAuth } from 'react-oidc-context';
+import { fetchUserAttributes } from "aws-amplify/auth";
 
 const getStatusColor = (status) => {
     switch (status) {
@@ -51,12 +51,27 @@ const Overview = ({ setSelectedPage, setSelectedTripId }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [currentTripId, setCurrentTripId] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
-    const auth = useAuth();
+    const [userEmail, setUserEmail] = useState(null); // State to store user email
 
+    // Fetch user email on mount
+    useEffect(() => {
+        const fetchEmail = async () => {
+            try {
+                const attributes = await fetchUserAttributes();
+                setUserEmail(attributes?.email); // Extract and store the email
+            } catch (error) {
+                console.error("Error fetching user attributes:", error);
+            }
+        };
+
+        fetchEmail();
+    }, []);
+
+    // Fetch trips when email is available
     useEffect(() => {
         const fetchTrips = async () => {
+            if (!userEmail) return; // Wait until email is loaded
             try {
-                const userEmail = auth.user?.profile.email;
                 const response = await fetch(
                     `https://olt95t35ea.execute-api.us-east-1.amazonaws.com/dev/gettrips?email=${encodeURIComponent(
                         userEmail
@@ -78,7 +93,7 @@ const Overview = ({ setSelectedPage, setSelectedTripId }) => {
         };
 
         fetchTrips();
-    }, [auth.user]);
+    }, [userEmail]);
 
     const handleEditTrip = (tripId) => {
         setSelectedTripId(tripId);
