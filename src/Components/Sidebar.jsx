@@ -68,7 +68,7 @@ const Sidebar = ({ onSelectPage, onSignOut }) => {  // Add onSignOut to props
                     <img
                         src={require("../Images/logo128.png")}
                         alt="Logo"
-                        style={{ width: 100, height: 100 }}
+                        style={{ width: 180 }}
                     />
                     {/* <Typography variant="h4" sx={{ fontFamily: 'Short Stack' }} ml={2}>
                         RollCall
