@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react"; 
 import { 
     CalendarMonth as CalendarMonthIcon,
-    LocationOn as LocationOnIcon 
+    CheckCircle as CheckCircleIcon,
+    LocationOn as LocationOnIcon
 } from "@mui/icons-material"; 
 import {
     Autocomplete, 
@@ -20,6 +21,8 @@ import {
     MenuItem,
     Paper, 
     Select,
+    Snackbar, 
+    SnackbarContent,
     TextField,
     Typography,
 } from "@mui/material"; 
@@ -63,7 +66,7 @@ const Overview = ({ setSelectedPage, setSelectedTripId }) => {
     const [currentTripId, setCurrentTripId] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [userEmail, setUserEmail] = useState(null); 
-    const auth = useAuth();
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
 
     // fetch user email on mount
     useEffect(() => {
@@ -165,7 +168,7 @@ const Overview = ({ setSelectedPage, setSelectedTripId }) => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    email: auth.user?.profile.email,
+                    email: userEmail,
                     tripId: messageDialogTripId,
                     to: messageData.to,
                     documents: messageData.documents,
@@ -180,6 +183,7 @@ const Overview = ({ setSelectedPage, setSelectedTripId }) => {
             const data = await response.json();
             console.log('Email sent successfully:', data);
             handleCloseMessageDialog();
+            setSnackbarOpen(true);
         } catch (error) {
             console.error('Error sending email:', error);
             alert('Failed to send emails. Please try again.');
@@ -349,6 +353,23 @@ const Overview = ({ setSelectedPage, setSelectedTripId }) => {
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            {/* message sent success */}
+            <Snackbar
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                open={snackbarOpen}
+                autoHideDuration={3000}
+                onClose={() => setSnackbarOpen(false)}
+            >
+                <SnackbarContent
+                    message={
+                        <Box display="flex" alignItems="center">
+                            <CheckCircleIcon style={{ color: 'green', marginRight: 10 }} />
+                            <Typography>Message successfully sent</Typography>
+                        </Box>
+                    }
+                />
+            </Snackbar>
         </Box>
     );
 };
