@@ -87,7 +87,7 @@ const Sidebar = ({ onSelectPage, onSignOut }) => {
                     <img
                         src={require("../Images/logo128.png")}
                         alt="Logo"
-                        style={{ width: 100, height: 100 }}
+                        style={{ width: 180 }}
                     />
                 </Box>
 

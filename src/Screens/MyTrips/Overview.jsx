@@ -3,20 +3,31 @@ import {
     CalendarMonth as CalendarMonthIcon,
     LocationOn as LocationOnIcon 
 } from "@mui/icons-material"; 
-import { 
+import {
+    Autocomplete, 
     Box, 
     Button,
     CircularProgress,
     Container,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
     Divider, 
+    FormControl,
     Grid, 
+    InputLabel,
+    MenuItem,
     Paper, 
+    Select,
+    TextField,
     Typography,
 } from "@mui/material"; 
 import TripDetails from "./TripDetails";
 import EditTrip from "../EditTrips/EditTrip";
 import { fetchUserAttributes } from "aws-amplify/auth";
 
+// helper function to determine status colors
 const getStatusColor = (status) => {
     switch (status) {
         case "PENDING":
@@ -51,14 +62,15 @@ const Overview = ({ setSelectedPage, setSelectedTripId }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [currentTripId, setCurrentTripId] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
-    const [userEmail, setUserEmail] = useState(null); // State to store user email
+    const [userEmail, setUserEmail] = useState(null); 
+    const auth = useAuth();
 
-    // Fetch user email on mount
+    // fetch user email on mount
     useEffect(() => {
         const fetchEmail = async () => {
             try {
                 const attributes = await fetchUserAttributes();
-                setUserEmail(attributes?.email); // Extract and store the email
+                setUserEmail(attributes?.email); // extract and store the email
             } catch (error) {
                 console.error("Error fetching user attributes:", error);
             }
@@ -67,7 +79,17 @@ const Overview = ({ setSelectedPage, setSelectedTripId }) => {
         fetchEmail();
     }, []);
 
-    // Fetch trips when email is available
+    // message popup states
+    const [messageDialogOpen, setMessageDialogOpen] = useState(false);
+    const [messageData, setMessageData] = useState({
+        to: [],
+        documents: [],
+        message: ""
+    });
+    const [availableDocuments, setAvailableDocuments] = useState([]);
+    const [messageDialogTripId, setMessageDialogTripId] = useState(null);
+
+    // fetch trips on component mount
     useEffect(() => {
         const fetchTrips = async () => {
             if (!userEmail) return; // Wait until email is loaded
@@ -95,6 +117,7 @@ const Overview = ({ setSelectedPage, setSelectedTripId }) => {
         fetchTrips();
     }, [userEmail]);
 
+    // handler functions
     const handleEditTrip = (tripId) => {
         setSelectedTripId(tripId);
         setSelectedPage("Edit Trip"); 
@@ -108,24 +131,76 @@ const Overview = ({ setSelectedPage, setSelectedTripId }) => {
         setCurrentTripId(null); 
     };
 
+    // message popup functions
+    const handleOpenMessageDialog = async (tripId) => {
+        setMessageDialogTripId(tripId);
+        try {
+            const response = await fetch(
+                `https://lbeaduxwcl.execute-api.us-east-1.amazonaws.com/default/getTripByID/trip/id?id=${tripId}`
+            );
+            const tripData = await response.json();
+            
+            // set available documents from the fetched trip data
+            setAvailableDocuments(tripData?.uploadedFiles || []);
+            setMessageDialogOpen(true);
+        } catch (error) {
+            console.error('Error fetching trip documents:', error);
+            alert('Failed to load trip documents. Please try again.');
+        }
+    };
+
+    const handleCloseMessageDialog = () => {
+        setMessageDialogOpen(false);
+        setMessageDialogTripId(null);
+        setMessageData({
+            to: [],
+            documents: [],
+            message: ""
+        });
+    };
+
+    const handleSendMessage = async () => {
+        try {
+            const response = await fetch('https://nt0yfs8baf.execute-api.us-east-1.amazonaws.com/default/sendEmail', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: auth.user?.profile.email,
+                    tripId: messageDialogTripId,
+                    to: messageData.to,
+                    documents: messageData.documents,
+                    message: messageData.message
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to send email. Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('Email sent successfully:', data);
+            handleCloseMessageDialog();
+        } catch (error) {
+            console.error('Error sending email:', error);
+            alert('Failed to send emails. Please try again.');
+        }
+    };
+
+    // loading state
+    if (isLoading) {
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+                <CircularProgress size={60} />
+            </Box>
+        );
+    }
+
+    // show trip details if a trip is selected
     if (currentTripId) {
         return isEditing ? (
             <EditTrip tripId={currentTripId} onBack={handleBackToOverview} />
         ) : (
             <TripDetails tripId={currentTripId} onBack={handleBackToOverview} />
-        );
-    }
-
-    if (isLoading) {
-        return (
-            <Box 
-                display="flex" 
-                justifyContent="center" 
-                alignItems="center" 
-                minHeight="80vh"
-            >
-                <CircularProgress size={60} />
-            </Box>
         );
     }
 
@@ -140,15 +215,21 @@ const Overview = ({ setSelectedPage, setSelectedTripId }) => {
                         return (
                             <Grid item xs={12} sm={6} md={4} key={trip.id}>
                                 <Paper elevation={3} sx={{ p: 2, bgcolor }}>
-                                    <Typography variant="h6" fontWeight="bold">{trip.tripName || "Untitled Trip"}</Typography>
+                                    <Typography variant="h6" fontWeight="bold">
+                                        {trip.tripName || "Untitled Trip"}
+                                    </Typography>
                                     <Box display="flex" flexDirection="column" gap={1} mt={2}>
                                         <Box display="flex" alignItems="center">
                                             <LocationOnIcon />
-                                            <Typography variant="body2" ml={1}>{trip.mainDestination || "Unknown Destination"}</Typography>
+                                            <Typography variant="body2" ml={1}>
+                                                {trip.mainDestination || "Unknown Destination"}
+                                            </Typography>
                                         </Box>
                                         <Box display="flex" alignItems="center">
                                             <CalendarMonthIcon />
-                                            <Typography variant="body2" ml={1}>{trip.startDate || "Unknown Date"}</Typography>
+                                            <Typography variant="body2" ml={1}>
+                                                {trip.startDate || "Unknown Date"}
+                                            </Typography>
                                         </Box>
                                     </Box>
                                     <Box 
@@ -179,12 +260,95 @@ const Overview = ({ setSelectedPage, setSelectedTripId }) => {
                                     >
                                         Edit
                                     </Button>
+                                    {trip.status === "APPROVED" && (
+                                        <Button
+                                            variant="contained"
+                                            fullWidth
+                                            sx={{ mt: 2, bgcolor: "#007FFF" }}
+                                            onClick={() => handleOpenMessageDialog(trip.id)}
+                                        >
+                                            Send Message
+                                        </Button>
+                                    )}
                                 </Paper>
                             </Grid>
                         );
                     })}
                 </Grid>
             </Container>
+
+            {/* message popup */}
+            <Dialog 
+                open={messageDialogOpen} 
+                onClose={handleCloseMessageDialog}
+                fullWidth
+                maxWidth="md"
+            >
+                <DialogTitle>Send Message</DialogTitle>
+                <DialogContent>
+                    <Box sx={{ pt: 2 }} display="flex" flexDirection="column" gap={2}>
+                        <Autocomplete
+                            multiple
+                            freeSolo
+                            options={["All Students", "All Parents"]}
+                            value={messageData.to}
+                            onChange={(event, newValue) => {
+                                setMessageData(prev => ({ ...prev, to: newValue }));
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="To"
+                                    placeholder={messageData.to.length === 0 ? "Type email and press enter" : ""}
+                                />
+                            )}
+                        />
+
+                        <Autocomplete
+                            multiple
+                            options={availableDocuments.map(doc => doc.name)}
+                            value={messageData.documents}
+                            onChange={(event, newValue) => {
+                                setMessageData(prev => ({ ...prev, documents: newValue }));
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Documents"
+                                    placeholder={messageData.documents.length === 0 ? (availableDocuments.length > 0 ? "Select documents to attach" : "No documents to attach") : ""}
+                                />
+                            )}
+                            disabled={availableDocuments.length === 0}
+                        />
+
+                        <TextField
+                            fullWidth
+                            multiline
+                            rows={4}
+                            label="Message"
+                            value={messageData.message}
+                            onChange={(e) => setMessageData(prev => ({ ...prev, message: e.target.value }))}
+                        />
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button 
+                        onClick={handleCloseMessageDialog}
+                        sx={{ margin: 2 }}
+                    >
+                        Cancel
+                    </Button>
+                    <Button 
+                        onClick={handleSendMessage}
+                        variant="contained"
+                        color="primary"
+                        disabled={!messageData.to.length || !messageData.message}
+                        sx={{ margin: 2 }}
+                    >
+                        Send
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };
