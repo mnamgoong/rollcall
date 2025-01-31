@@ -150,8 +150,9 @@ const Overview = ({ setSelectedPage, setSelectedTripId }) => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                    email: auth.user?.profile.email,
                     tripId: messageDialogTripId,
-                    recipients: messageData.to,
+                    to: messageData.to,
                     documents: messageData.documents,
                     message: messageData.message
                 }),
